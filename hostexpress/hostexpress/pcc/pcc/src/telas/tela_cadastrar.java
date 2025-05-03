@@ -136,11 +136,13 @@ public class tela_cadastrar extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel2.setText("E-mail:");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(110, 90, 60, 16);
+        jLabel2.setBounds(110, 90, 60, 15);
         getContentPane().add(tfemail);
         tfemail.setBounds(110, 112, 250, 22);
         tfemail.getAccessibleContext().setAccessibleName("");
 
+        btproximo.setBackground(new java.awt.Color(51, 51, 255));
+        btproximo.setForeground(new java.awt.Color(255, 255, 255));
         btproximo.setText("Próximo");
         btproximo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -148,14 +150,14 @@ public class tela_cadastrar extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btproximo);
-        btproximo.setBounds(190, 150, 90, 40);
+        btproximo.setBounds(190, 160, 90, 40);
 
         jLabel1.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("CADASTRO DE EMPRESAS");
         jLabel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(110, 10, 240, 22);
+        jLabel1.setBounds(110, 10, 240, 21);
 
         jLabel7.setFont(new java.awt.Font("Liberation Sans", 0, 10)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 51, 51));
@@ -166,12 +168,12 @@ public class tela_cadastrar extends javax.swing.JFrame {
 
         jLabel3.setText("Insira seu e-mail para confirmação");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(140, 60, 200, 16);
+        jLabel3.setBounds(110, 60, 410, 17);
 
         jLabel4.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel4.setText("Confirme a senha:");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(110, 140, 120, 16);
+        jLabel4.setBounds(110, 140, 120, 15);
 
         jToggleButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/hidden.png"))); // NOI18N
         jToggleButton1.setMaximumSize(new java.awt.Dimension(15, 23));
@@ -182,7 +184,7 @@ public class tela_cadastrar extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jToggleButton1);
-        jToggleButton1.setBounds(370, 160, 22, 23);
+        jToggleButton1.setBounds(370, 160, 22, 22);
 
         jToggleButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/hidden.png"))); // NOI18N
         jToggleButton2.setMaximumSize(new java.awt.Dimension(15, 23));
@@ -193,8 +195,10 @@ public class tela_cadastrar extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jToggleButton2);
-        jToggleButton2.setBounds(370, 110, 22, 23);
+        jToggleButton2.setBounds(370, 110, 22, 22);
 
+        jButton1.setBackground(new java.awt.Color(51, 51, 255));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Salvar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -202,11 +206,11 @@ public class tela_cadastrar extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton1);
-        jButton1.setBounds(20, 200, 72, 23);
+        jButton1.setBounds(190, 190, 90, 40);
         getContentPane().add(jPasswordField1);
-        jPasswordField1.setBounds(110, 160, 250, 22);
+        jPasswordField1.setBounds(110, 160, 250, 23);
         getContentPane().add(jPasswordField2);
-        jPasswordField2.setBounds(110, 110, 250, 22);
+        jPasswordField2.setBounds(110, 110, 250, 23);
 
         tfcodigo.setFont(new java.awt.Font("Liberation Sans", 0, 22)); // NOI18N
         tfcodigo.addActionListener(new java.awt.event.ActionListener() {
@@ -215,7 +219,7 @@ public class tela_cadastrar extends javax.swing.JFrame {
             }
         });
         getContentPane().add(tfcodigo);
-        tfcodigo.setBounds(190, 100, 90, 35);
+        tfcodigo.setBounds(190, 100, 90, 32);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -234,7 +238,7 @@ public class tela_cadastrar extends javax.swing.JFrame {
         
         if(email.contains("@") || email.contains(".com") || email.contains(".br")){
             try{
-                sql = "SELECT email FROM EMPRESAS WHERE email LIKE ?";
+                sql = "SELECT email FROM empresas WHERE email LIKE ?";
                 PreparedStatement stm = con.prepareStatement(sql,ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_UPDATABLE);
                 stm.setString(1,email);
@@ -270,7 +274,6 @@ public class tela_cadastrar extends javax.swing.JFrame {
                         mensagem.setText(corpo);
 
                         Transport.send(mensagem);
-                        System.out.println("E-mail enviado com sucesso!");
                     }
                     catch(MessagingException e){
                         System.out.println("oi" + e);
@@ -278,9 +281,9 @@ public class tela_cadastrar extends javax.swing.JFrame {
                     btproximo.setVisible(false);
                     tfcodigo.setVisible(true);
                     tfemail.setVisible(false);
-                    jLabel2.setVisible(false);
+                    jLabel2.setText("Insira uma senha para Login:");
+                    jLabel4.setVisible(true);
                     jLabel3.setText("Insira o código de verificação enviado para seu E-mail:");
-                    jLabel3.setSize(210, 16);
                 }
                 else{
                     tfemail.setText("");
@@ -316,13 +319,13 @@ public class tela_cadastrar extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (jPasswordField2.getEchoChar() == (char)0) {
             jPasswordField2.setEchoChar('*');
-            URL iconurl = Main.class.getResource("./src/eye.png");
+            URL iconurl = Main.class.getResource("./assets/eye.png");
             ImageIcon icon = new ImageIcon(iconurl);
             jToggleButton2.setIcon(icon);
                 } 
         else {
             jPasswordField2.setEchoChar((char)0);
-            URL iconurl = Main.class.getResource("./src/hidden.png");
+            URL iconurl = Main.class.getResource("./assets/hidden.png");
             ImageIcon icon = new ImageIcon(iconurl);
             jToggleButton2.setIcon(icon);  
         }
@@ -344,7 +347,9 @@ public class tela_cadastrar extends javax.swing.JFrame {
                 stm.setString(2, senha);
                 rs = stm.executeUpdate();
                 if (rs>0) {
-                    JOptionPane.showMessageDialog(null, "Dados Gravados com Sucesso!");
+                    tela_empresa telinha_empresa = new tela_empresa();
+                    telinha_empresa.setVisible(true);
+                    this.dispose();
                 } 
                 else {
                     JOptionPane.showMessageDialog(null, "Erro ao Gravar!");

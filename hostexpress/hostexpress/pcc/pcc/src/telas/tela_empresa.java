@@ -39,9 +39,9 @@ public class tela_empresa extends javax.swing.JFrame {
         String regex = "^(\\d{2})\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}$";
         Pattern padrao = Pattern.compile(regex);
         Matcher result = padrao.matcher(cnpj);
-        cnpj = cnpj.replace("/","").replace("-","").replace(".","");
         if(result.matches()){
             try{
+                cnpj = cnpj.replace("/","").replace("-","").replace(".","");
                 String url = "https://brasilapi.com.br/api/cnpj/v1/" + cnpj;
                 HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
                 connection.setRequestMethod("GET");
@@ -68,14 +68,14 @@ public class tela_empresa extends javax.swing.JFrame {
                 tfnum.setText(jsonResponse.getString("numero"));
             }
             catch (MalformedURLException ex) {
-                JOptionPane.showMessageDialog(null,ex);
+                JOptionPane.showMessageDialog(null, "CNPJ inválido!");
             }
             catch (IOException | JSONException ex) {
-                JOptionPane.showMessageDialog(null,ex);
+                JOptionPane.showMessageDialog(null, "CNPJ inválido!");
             }
         }
         else{
-            JOptionPane.showMessageDialog(null, "CNPJ não encontrado!");
+            JOptionPane.showMessageDialog(null, "Formato inválido!");
         }
     }
     @SuppressWarnings("unchecked")
@@ -142,6 +142,8 @@ public class tela_empresa extends javax.swing.JFrame {
 
         ComboEsp.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "   ", "Farmaceuticos", "Mercado", "Cosméticos", "Construções", "Roupas", "Eletrodomésticos", "Móveis", "Videogames", "Papelaria", "Automobilístico", "Outro" }));
 
+        jButton1.setBackground(new java.awt.Color(51, 51, 255));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Salvar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -329,11 +331,7 @@ public class tela_empresa extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         //ENVIAR CADASTRO DA EMPRESA PARA CADASTRO_EMPRESAS COM CONFIRMADO 'N'
-        if(ftftelefone1.getText().isEmpty()){
-            System.out.println("oi");
-        }
         JOptionPane.showMessageDialog(null,"Agradecemos seu cadastro!\nEle será analisado e você receberá um E-mail com o resultado!");
     }//GEN-LAST:event_jButton1ActionPerformed
 
