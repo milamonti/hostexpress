@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>HostExpress</title>
+    <link rel="shortcut icon" type="imagex/png" href="caminhaobranco.ico" alt="icone">
+</head>
+<body>
+    <!-- Header 1 -->
+    <header>
+        <div class="logo-container">
+            <img src="caminhaobranco.png" id="HostVrum">
+        </div>
+        <div>
+            <img class ="logo-container2" src="hosttexto.png"> 
+        </div>  
+
+        <!-- Header 1  Itens-->
+        <nav>
+            <div class="titulocima">
+                <h1>Bem vindo</h1>
+            </div>
+            <div class="separator"></div>
+            <div>
+                <img class="profileco" src="profile.png">
+            </div>  
+            <a href="login.html" class="underline">Entrar</a>
+            <a>ou</a>
+            <a href="cadastrarusuario.html" class="underline">Cadastrar-se</a>
+            
+            <a>Sua casa está em</a>
+            <div class="loc">
+                <script>
+                const bairroAmigo = 'Bairro do Amigo';
+                const bairro = localStorage.getItem('bairro');
+                const locDiv = document.querySelector('.loc');
+
+                if (bairroAmigo) {
+                    locDiv.textContent = `Bairro do amigo: ${bairroAmigo}`;
+                } else if (bairro) {
+                    locDiv.textContent = `Seu bairro: ${bairro}`;
+                } else {
+                    locDiv.textContent = 'Bairro não encontrado';
+                }
+                </script>
+            </div>
+            <a href="#">🛒</a>
+        </nav>
+    </header>
+    <div class="linha"></div>
+
+    <!-- Header 2 NavBar -->
+    <header class="header2">
+        <nav> 
+            <div class="search-bar">
+                <input type="text" placeholder="Buscar produtos ou lojas...">
+                <button>🔍</button>
+            </div>
+        </nav>
+    </header>
+    <!-- Produto -->
+    <div class="card">
+        <img src="jeans3.jpg" alt="" style="width:100%">
+        <h1>Nome Prod</h1>
+        <p class="preco">R$19,99</p>
+        <p>DescriProd</p>
+        <p><button>Adicionar ao carrinho</button></p>
+    </div>
+
+    
+
+</body>
+</html>
