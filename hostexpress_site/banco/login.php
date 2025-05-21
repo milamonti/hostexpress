@@ -30,7 +30,6 @@ if(password_verify($SENHA,$response['SENHA'])){
     echo json_encode(['status' => true]);
     $_SESSION['USUARIO'] = $response['NOME'];
     $_SESSION['EMAIL'] = $EMAIL;
-    header('Location: ../index.php');
 }
 else{
     echo json_encode(['status' => false]);

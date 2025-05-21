@@ -6,7 +6,7 @@ async function Login() {
     formData.append("EMAIL", $("#email").val());
     formData.append("SENHA", $("#senha").val());
 
-    let response = await fetch(`../php/login.php`, {
+    let response = await fetch(`./php/login.php`, {
         body: formData,
         method: "POST"
     });
