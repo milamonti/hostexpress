@@ -20,7 +20,6 @@ async function Login() {
     }
 }
 
-//precisa arruma essa merda ainda 
 $(document).ready(function () {
     $('#ver_senha').click(function () {
         const input = $('#senha');
