@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cadastrar Novo Usuário</title>
   <link rel="shortcut icon" type="image/x-icon" href="../assets/caminhaobranco.ico" />
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script src="../js/cadastrausuario.js"></script>
+
+  <!--CSS-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
@@ -142,5 +142,10 @@
       </form>
     </div>
   </div>
+
+  <!--SCRIPTS-->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="../js/cadastrausuario.js"></script>
+
 </body>
 </html>
