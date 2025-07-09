@@ -6,18 +6,14 @@ $(document).ready(function() {
 
     function retomar() {
         rolagem = setInterval(()=> {
-        $('#cardCarousel').carousel('next');
+            $('#cardCarousel').carousel('next');
         }, 8000);
     }
     retomar();
 
-    $("#modalProduto").on("show.bs.modal", ()=> {
-        clearInterval(rolagem);
-    });
+    $("#modalProduto").on("show.bs.modal", ()=> clearInterval(rolagem) );
 
-    $("#modalProduto").on("hide.bs.modal", ()=> {
-        retomar();
-    });
+    $("#modalProduto").on("hide.bs.modal", ()=> retomar());
 
     const city = document.getElementById('btn-city');
     const popover = new bootstrap.Popover(city);
@@ -28,13 +24,8 @@ $(document).ready(function() {
         localStorage.setItem('popovermostrado', true);
     }
 
-    $("#btn-login").on('click', ()=> {
-        CarregarPagina('login_fetch');
-    });
-
-    $("#btn-cadastrar").on('click', ()=> {
-        CarregarPagina('cadastrar_fetch');
-    });
+    $("#btn-login").on('click', ()=> CarregarPagina('login_fetch'));
+    $("#btn-cadastrar").on('click', ()=> CarregarPagina('cadastrar_fetch'));
     
     const search = document.getElementById('search');
 
@@ -75,16 +66,12 @@ $(document).ready(function() {
 
 async function CarregarProdutos() {
     let response = await fetch(`./banco/carregar_produtos.php`);
-    let produtos = await response.json();
-    
-    return produtos;
+    return await response.json();
 }
 
 async function BuscarProdutos(pesquisa) {
     let response = await fetch(`./banco/buscar_produtos.php?NOME=${pesquisa}`);
-    let data = await response.json();
-
-    return data;
+    return await response.json();
 }
 
 function cardsProdutos(produto) {

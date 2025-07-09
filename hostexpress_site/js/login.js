@@ -1,7 +1,9 @@
+import { showAlert } from "./utils";
+
 async function Login(e) {
     e.preventDefault();
     if (!$("#email").val() || !$("#senha").val()){
-        alert('preencha todos os campos!');
+        showAlert('error', 'Insira seu usuário e senha!');
     }
     let formData = new FormData();
     formData.append("EMAIL", $("#email").val());
@@ -12,12 +14,12 @@ async function Login(e) {
         method: "POST"
     });
     let data = await response.json();
-    console.log(data);
+    
     if(data.status !== false){
       window.location.replace('http://127.0.0.1/hostexpress_site/');
     }
     else{
-      alert('E-mail ou senha incorretos!');
+      showAlert('error', 'Usuário ou senha incorretos!');
     }
 }   
 

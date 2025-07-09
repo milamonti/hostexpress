@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
 
 
     <style>
@@ -84,7 +85,7 @@
                     <?php else: ?>
                         <div class="text-center mx-3 d-flex flex-column justify-content-center align-items-center">
                             <button type="button" id="btn-login" class="btn btn-outline-light mx-2 d-inline-flex align-items-center" style="border:none;">
-                                <i class="bi bi-person-circle me-2"></i>Entrar
+                                <i class="bi bi-person-circle me-2"></i>dldasklçaskalçdkalç
                             </button>
                             <span class="text-white">ou</span>
                             <button type="button" id="btn-cadastrar" class="btn btn-outline-light d-inline-flex align-items-center mx-3" style="border:none;">
@@ -183,6 +184,8 @@
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
   <script src="./js/index.js?a=<?php echo microtime(); ?>"></script>
     
 </body>

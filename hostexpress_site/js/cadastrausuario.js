@@ -1,9 +1,9 @@
-import { addCleave, removeMask } from "./utils.js";
+import { addCleave, removeMask, showAlert } from "./utils.js";
 
 async function buscaCep() {
     $("#cep").removeAttr('style');
-    if (!$("#cep").val()) {
-        alert('Digite um CEP!');
+    if (!$("#cep").val() || $("#cep").val().length < 8) {
+        showAlert('warning', 'Digite um CEP válido!');
         return;
     }
 
@@ -12,7 +12,7 @@ async function buscaCep() {
     let data = await response.json();
 
     if(data.erro === "true" || !response.ok){
-        alert('CEP inválido');
+        showAlert('error', 'CEP inválido!');
         $("#cep").css({
             'border-width': '2px',
             'border-style': 'solid',
@@ -32,22 +32,22 @@ async function buscaCep() {
     });
 }
 
-$("#cadastrar").on('click', function (event) {
+$("#cadastrar").on('click', (event)=> {
     event.preventDefault(); 
 
     if (
         !$("#nome").val() || 
-        !$("#celular").val() || 
+        $("#celular").val().length < 14 || 
         !$("#email").val() ||
         !$("#senha").val() || 
-        !$("#cep").val() || 
+        $("#cep").val().length < 5 || 
         !$("#rua").val() ||
         !$("#bairro").val() || 
         !$("#cidade").val() || 
         !$("#estado").val() || 
         !$("#num").val()
     ) {
-        alert("Por favor, preencha todos os campos.");
+        showAlert('warning', 'Por favor preencha todos os campos!');
         return;
     }
 
@@ -71,15 +71,20 @@ $("#cadastrar").on('click', function (event) {
         type: 'POST',
         dataType: 'json',
         data: dados,
-        success: function (res) {
+        success: res => {
             if (res.success) {
                 document.getElementById("codigoModal").style.display = "block";
             } else {
-                alert("Erro ao enviar e-mail: " + (res.message || "Erro desconhecido"));
+                showAlert('error', 'Erro ao enviar e-mail', 'Entre em contato com o suporte', 2000);
             }
         },
-        error: function (xhr, status, error) {
-            alert("Erro ao comunicar com o servidor:" + error);
+        error: xhr => {
+            showAlert(
+                'error', 
+                'Erro ao se comunicar com o servidor', 
+                'Entre em contato com o suporte para mais detalhes', 
+                2000
+            );
             console.error(xhr.responseText);
         }
     });
@@ -103,7 +108,7 @@ function enviarCodigo() {
         success: function (res) {
             console.log("Resposta do servidor:", res);
             if (res.success) {
-                alert("Cadastro realizado com sucesso!")
+                showAlert('success', 'Cadastro realizado!')
                 .then(
                     window.location.href = "login.php"
                 );
@@ -112,15 +117,13 @@ function enviarCodigo() {
             }
         },
         error: function (xhr, status, error) {
-            alert("Erro ao comunicar com o servidor 303: " + error);
+            showAlert('error', 'Erro ao se comunicar com o servidor!', 'Entre em contato com o suporte para mais detalhes', 2000);
             console.error(xhr.responseText);
         }
     });
 }
 
-$("#buscarcep").on('click', async()=> {
-    buscaCep();
-})
+$("#buscarcep").on('click', async()=> buscaCep());
 
 addCleave('celular', "phone");
 addCleave('cep', 'cep');

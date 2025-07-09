@@ -54,3 +54,5 @@
   </div>
 </div>
 
+<script type="module" src="./js/conta.js?a=<?php echo microtime() ?>"></script>
+
