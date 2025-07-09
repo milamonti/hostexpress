@@ -19,7 +19,7 @@ try {
 
     $QUERY = <<<SQL
         SELECT DESCRICAO, CATEGORIA,
-               UNIDADE, QTD, PRECO_UN
+               UNIDADE, QTD, PRECO_UN, PRODUTO_ID
         FROM he_produtos
         WHERE PRODUTO_ID = :PRODUTO
     SQL;

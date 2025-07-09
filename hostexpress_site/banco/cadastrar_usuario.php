@@ -2,17 +2,19 @@
 session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-require_once 'conexao.php';
-require 'PHPMailer/PHPMailer.php';
-require 'PHPMailer/SMTP.php';
-require 'PHPMailer/Exception.php';
+
+require_once '../conexao.php';
+
+require '../PHPMailer/PHPMailer.php';
+require '../PHPMailer/SMTP.php';
+require '../PHPMailer/Exception.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 header('Content-Type: application/json');
 
-$conexao = new Conexao();  
+$conexao = new Conexao();
 $db = $conexao->conectar();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -24,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $dados[$key] = trim($value);
         }
 
-        $codigo = rand(100000, 999999); 
+        $codigo = rand(100000, 999999);
         $_SESSION['codigo_verificacao'] = $codigo;
         $_SESSION['dados_cadastro'] = $dados;
 
@@ -34,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = 'hostexpressjundiai@gmail.com';
-            $mail->Password = 'kwvs ukak jgel gjvi';
+            $mail->Password = 'kwvs ukak jgel gjvi'; 
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
@@ -71,10 +73,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $db->prepare($sql);
             $senhaHash = password_hash($dados['senha'], PASSWORD_DEFAULT);
 
+            $complemento = $dados['complemento'] ?? '';
+            if (empty($complemento)) {
+                $complemento = '';
+            }
+
             $stmt->execute([
-                $dados['nome'], $dados['email'], $senhaHash, $dados['celular'],
-                $dados['rua'], $dados['num'], $dados['cidade'], $dados['bairro'],
-                $dados['cep'], $dados['complemento']
+                $dados['nome'], 
+                $dados['email'], 
+                $senhaHash, 
+                $dados['celular'], 
+                $dados['rua'], 
+                $dados['num'], 
+                $dados['cidade'], 
+                $dados['bairro'], 
+                $dados['cep'], 
+                $complemento
             ]);
 
             unset($_SESSION['codigo_verificacao'], $_SESSION['dados_cadastro']);
@@ -86,4 +100,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
-?>

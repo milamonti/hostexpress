@@ -11,7 +11,7 @@ if(session_status() == PHP_SESSION_NONE){
 }
 
 $EMAIL = $_POST['EMAIL'];
-$SENHA = $_POST['SENHA'];
+$SENHA = trim($_POST['SENHA']);
 
 $QUERY = <<<SQL
     SELECT NOME, SENHA 

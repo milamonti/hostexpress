@@ -1,47 +1,31 @@
-function buscaCep() {
+async function buscaCep() {
     if (!$("#cep").val()) {
-        alert('Por favor, digite um CEP!');
+        alert('Digite um CEP!');
         return;
     }
 
     let cep = $("#cep").val().replace("-", "").replace(".", "");
-    if (cep !== "") {
-        let url = "https://brasilapi.com.br/api/cep/v1/" + cep;
-        let req = new XMLHttpRequest();
-        req.open("GET", url);
-        req.send();
+    let response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    let data = await response.json();
 
-        req.onload = function() {
-            if (req.status === 200) {
-                let endereco = JSON.parse(req.response);
-                document.getElementById("rua").value = endereco.street;
-                document.getElementById("bairro").value = endereco.neighborhood;
-                document.getElementById("cidade").value = endereco.city;
-                document.getElementById("estado").value = endereco.state;
-            } else if (req.status === 404) {
-                alert("CEP inválido");
-            } else {
-                console.log("Erro ao fazer requisição");
-            }
-        };
+    if(!data || !response.ok){
+        alert('CEP inválido');
+        return;
     }
+
+    $("#rua").val(data.logradouro);
+    $("#bairro").val(data.bairro);
+    $("#cidade").val(data.localidade);
+    $("#estado").val(data.estado);
 }
 
-$("#btn-cadastrar").on('click', async function(e) {
-    e.preventDefault();
+$("#btn-cadastrar").on('click', function (event) {
+    event.preventDefault(); 
 
-    if (!$("#nome").val() || 
-        !$("#celular").val() || 
-        !$("#email").val() || 
-        !$("#senha").val() || 
-        !$("#cep").val() || 
-        !$("#rua").val() || 
-        !$("#bairro").val() || 
-        !$("#cidade").val() || 
-        !$("#estado").val() || 
-        !$("#num").val()) {
-        
-        alert('Por favor, preencha todos os campos obrigatórios!');
+    if (!$("#nome").val() || !$("#celular").val() || !$("#email").val() ||
+        !$("#senha").val() || !$("#cep").val() || !$("#rua").val() ||
+        !$("#bairro").val() || !$("#cidade").val() || !$("#estado").val() || !$("#num").val()) {
+        alert("Por favor, preencha todos os campos.");
         return;
     }
 
@@ -59,35 +43,37 @@ $("#btn-cadastrar").on('click', async function(e) {
         complemento: $("#complemento").val(),
         etapa: 'enviar_codigo'
     };
-    
-    
 
     $.ajax({
-    url: 'cadastrousuario.php',
-    type: 'POST',
-    data: dados,
-    success: function (res) {
-        console.log("Resposta convertida:", res); 
-        if (res.success) {
-            document.getElementById("codigoModal").style.display = "block";
-        } else {
-            alert("Erro ao enviar e-mail: " + res.message);
+        url: '../banco/cadastrar_usuario.php', 
+        type: 'POST',
+        dataType: 'json',
+        data: dados,
+        success: function (res) {
+            if (res.success) {
+                document.getElementById("codigoModal").style.display = "block";
+            } else {
+                alert("Erro ao enviar e-mail: " + (res.message || "Erro desconhecido"));
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("Erro ao comunicar com o servidor 404: " + error);
+            console.error(xhr.responseText);
         }
-    }
     });
 });
 
 function fecharModal() {
-    document.getElementById("codigoModal").style.display = "none"; 
+    document.getElementById("codigoModal").style.display = "none";
 }
 
 function enviarCodigo() {
     var codigo = document.getElementById("codigoInput").value;
 
     $.ajax({
-        url: 'cadastrousuario.php',
+        url: '../banco/cadastrar_usuario.php',
         type: 'POST',
-        dataType: 'json', 
+        dataType: 'json',
         data: {
             codigo: codigo,
             etapa: 'verificar_codigo'
@@ -96,14 +82,19 @@ function enviarCodigo() {
             console.log("Resposta do servidor:", res);
             if (res.success) {
                 alert("Cadastro realizado com sucesso!");
-                window.location.replace = "../php/login.php"; 
+                window.location.href = "login.php";
             } else {
-                document.getElementById("erroCodigo").innerText = res.message || "Código incorreto.";
+                document.getElementById("erroCodigo").innerText = res.erro || res.message || "Código incorreto.";
             }
         },
         error: function (xhr, status, error) {
-            alert("Erro ao comunicar com o servidor: " + error);
+            alert("Erro ao comunicar com o servidor 303: " + error);
             console.error(xhr.responseText);
         }
     });
 }
+
+$("#buscarcep").on('click', async()=> {
+    console.log('cliquei')
+    buscaCep();
+})
