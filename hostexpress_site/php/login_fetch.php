@@ -1,23 +1,35 @@
-<div id="form" class="d-flex flex-row rounded shadow-lg justify-content-center my-5 ms-5" style="width: 600px;">
-    <form class="w-100 p-3 d-flex flex-column align-items-center">
-        <div class="mb-3 w-100 badge text-bg-light">
-            <img class="img-fluid" src="./assets/logo.ico" height="auto" width="100" alt="Logo">
-            <h5 class="card-title fw-bold p-0">Login</h5>
-        </div>
-        <div class="form-floating mb-3 w-100">
-            <input type="email" class="form-control" id="email" placeholder="name@example.com">
+<div class="w-100 d-flex gap-4">
+    <div class="w-100 p-3 d-flex flex-column align-items-center">
+        <h5 class="fs-1 fw-bold p-0">Login</h5>
+        <hr>
+        <div class="form-floating mb-3 w-75">
+            <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
             <label for="email">E-mail</label>
         </div>
-        <div class="form-floating w-100">
-            <div class="position-relative">
-                <input type="password" class="form-control pe-5" id="senha" required>
-                <i class="bi bi-eye position-absolute top-50 end-0 translate-middle-y me-3" id="icone" style="cursor: pointer;"></i>
-            </div>
+        <div class="form-floating position-relative w-75">
+            <input type="password" class="form-control pe-5" id="senha" placeholder="&#xb7&#xb7&#xb7&#xb7&#xb7&#xb7&#xb7" required>
             <label for="senha">Senha</label>
+            <i class="bi bi-eye position-absolute top-50 end-0 translate-middle-y me-3" 
+                id="icone" style="cursor: pointer;">
+            </i>
         </div>
-        <button type="sumbit" class="btn btn-primary w-25 my-3" id="login" onclick="Login(event)">Entrar</button>
-    </form>
+        <button type="button" class="btn btn-primary align-self-center my-3 px-4" onclick="Login(event)">Entrar</button>
+    </div>
+    <div class="w-100 d-flex flex-column p-3">
+        <h5 class="fs-1 fw-bold p-0 text-center">Ainda não se cadastrou?</h5>
+        <hr>
+        <p class="text-muted text-center">Crie sua conta para aproveitar todas as promoções, realizar e acompanhar seus pedidos!</p>
+        <button class="btn btn-outline-primary align-self-center" onclick="CarregarPagina('cadastrar_fetch')">Cadastre-se</button>
+    </div>
 </div>
 
-<script src="./js/login.js?a=<?php echo time(); ?>"></script>
+<style>
+    hr {
+        height: 1rem;
+        width: 100%;
+        color: #000;
+    }
+</style>
+
+<script type="module" src="./js/login.js?a=<?php echo microtime(); ?>"></script>
 

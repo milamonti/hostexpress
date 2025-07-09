@@ -1,15 +1,23 @@
+import { addCleave, removeMask } from "./utils.js";
+
 async function buscaCep() {
+    $("#cep").removeAttr('style');
     if (!$("#cep").val()) {
         alert('Digite um CEP!');
         return;
     }
 
-    let cep = $("#cep").val().replace("-", "").replace(".", "");
+    let cep = removeMask($("#cep").val());
     let response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
     let data = await response.json();
 
-    if(!data || !response.ok){
+    if(data.erro === "true" || !response.ok){
         alert('CEP inválido');
+        $("#cep").css({
+            'border-width': '2px',
+            'border-style': 'solid',
+            'border-color': 'red'
+        });
         return;
     }
 
@@ -17,24 +25,38 @@ async function buscaCep() {
     $("#bairro").val(data.bairro);
     $("#cidade").val(data.localidade);
     $("#estado").val(data.estado);
+    $("#cep").css({
+        'border-width': '2px',
+        'border-style': 'solid',
+        'border-color': 'green'
+    });
 }
 
-$("#btn-cadastrar").on('click', function (event) {
+$("#cadastrar").on('click', function (event) {
     event.preventDefault(); 
 
-    if (!$("#nome").val() || !$("#celular").val() || !$("#email").val() ||
-        !$("#senha").val() || !$("#cep").val() || !$("#rua").val() ||
-        !$("#bairro").val() || !$("#cidade").val() || !$("#estado").val() || !$("#num").val()) {
+    if (
+        !$("#nome").val() || 
+        !$("#celular").val() || 
+        !$("#email").val() ||
+        !$("#senha").val() || 
+        !$("#cep").val() || 
+        !$("#rua").val() ||
+        !$("#bairro").val() || 
+        !$("#cidade").val() || 
+        !$("#estado").val() || 
+        !$("#num").val()
+    ) {
         alert("Por favor, preencha todos os campos.");
         return;
     }
 
     const dados = {
         nome: $("#nome").val(),
-        celular: $("#celular").val(),
+        celular: removeMask($("#celular").val()),
         email: $("#email").val(),
         senha: $("#senha").val(),
-        cep: $("#cep").val(),
+        cep: removeMask($("#cep").val()),
         rua: $("#rua").val(),
         bairro: $("#bairro").val(),
         cidade: $("#cidade").val(),
@@ -45,7 +67,7 @@ $("#btn-cadastrar").on('click', function (event) {
     };
 
     $.ajax({
-        url: '../banco/cadastrar_usuario.php', 
+        url: './banco/cadastrar_usuario.php', 
         type: 'POST',
         dataType: 'json',
         data: dados,
@@ -57,7 +79,7 @@ $("#btn-cadastrar").on('click', function (event) {
             }
         },
         error: function (xhr, status, error) {
-            alert("Erro ao comunicar com o servidor 404: " + error);
+            alert("Erro ao comunicar com o servidor:" + error);
             console.error(xhr.responseText);
         }
     });
@@ -81,8 +103,10 @@ function enviarCodigo() {
         success: function (res) {
             console.log("Resposta do servidor:", res);
             if (res.success) {
-                alert("Cadastro realizado com sucesso!");
-                window.location.href = "login.php";
+                alert("Cadastro realizado com sucesso!")
+                .then(
+                    window.location.href = "login.php"
+                );
             } else {
                 document.getElementById("erroCodigo").innerText = res.erro || res.message || "Código incorreto.";
             }
@@ -95,6 +119,11 @@ function enviarCodigo() {
 }
 
 $("#buscarcep").on('click', async()=> {
-    console.log('cliquei')
     buscaCep();
 })
+
+addCleave('celular', "phone");
+addCleave('cep', 'cep');
+
+window.fecharModal = fecharModal;
+window.enviarCodigo = enviarCodigo;

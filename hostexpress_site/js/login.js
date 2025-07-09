@@ -31,4 +31,6 @@ icone.addEventListener("click", () => {
     icone.classList.toggle("bi-eye");
     icone.classList.toggle("bi-eye-slash");
 });
+
+window.Login = Login;
     

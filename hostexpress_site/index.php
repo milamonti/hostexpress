@@ -8,6 +8,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="./assets/caminhaobranco-removebg-preview.ico" alt="icone">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
 
@@ -16,17 +17,6 @@
       width: 600px;
     }
 
-    .search-container i {
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    .search-container input {
-      width: 100%;
-      padding: 10px 10px 10px 35px;
-      box-sizing: border-box;
-    }
     .carousel-item > .row {
       display: flex;
     }
@@ -61,33 +51,13 @@
             <!--LOGO-->
             <div class="d-flex justify-content-start">
               <a href="index.php" class="d-flex flex-row align-items-center justify-content-start me-5" style="width: 200px;">
-                  <img class="mx-2" src="./assets/caminhaobranco.png" id="HostVrum" alt="Logo" width="120" height="auto">
+                  <img class="mx-2" src="./assets/caminhaobranco.png" alt="Logo" width="120" height="auto">
                   <img class="img-fluid w-75" src="./assets/hosttexto.png" alt="Texto HostExpress">
               </a>
             </div>
             <!--SEARCH INPUT-->
             <div class="d-flex justify-content-start search-container">
-              <div class="dropdown w-100 position-relative">
-                <input type="text" id="search" class="form-control dropdown-toggle ps-5" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" placeholder="Pesquise por produtos ou lojas.." />
-                <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-                <form class="dropdown-menu p-4 w-100">
-                  <p class="fw-bold">Pesquise por um monte de coisa, Tipo:</p>
-                  <div class="d-flex justify-content-between">
-                    <div class="w-50 d-flex flex-column">
-                      <h6>leo</h6>
-                      <h6>leo</h6>
-                      <h6>leo</h6>
-                      <h6>leo</h6>
-                    </div>
-                    <div class="w-50 d-flex flex-column" id="resultados">
-                      <h6>leo</h6>
-                      <h6>leo</h6>
-                      <h6>leo</h6>
-                      <h6>leo</h6>
-                    </div>
-                  </div>
-                </form>
-              </div>
+              <select id="search" class="ps-5 w-100"></select>
             </div>
             <!--LOCALIZACAO-->
             <div class="d-flex flex-row align-items-center">
@@ -212,7 +182,8 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="./js/index.js?a=<?php echo time(); ?>"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
+  <script src="./js/index.js?a=<?php echo microtime(); ?>"></script>
     
 </body>
     <!-- MODAL PRODUTO -->

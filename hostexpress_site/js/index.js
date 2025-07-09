@@ -41,8 +41,9 @@ $(document).ready(function() {
     let pesquisa = '';
 
     search.addEventListener('keydown', async (e)=> {
-        if(!$("#search").val()){
+        if(!$("#search").val() || $("#search").val().length == 0){
             $("#resultados").empty();
+            return;
         }
 
         if(/^[a-zA-Z]$/.test(e.key) || e.key === ' '){
@@ -308,6 +309,7 @@ function resetarCarrinho() {
 
 
 function CarregarPagina(name){
+    $(".modal").modal('hide');
     $("#container").innerHTML = '';
     $('#container').load('./php/' + name + '.php', function(response, status, xhr) {
         if (status != 'success') {
@@ -315,3 +317,27 @@ function CarregarPagina(name){
         }
     });
 }
+
+$('#search').select2({
+    placeholder: "Pesquise por produtos ou lojas ...",
+    minimumInputLength: 2,
+    ajax: {
+        url: './banco/buscar_resultados.php',
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+            return {
+                busca: params.term
+            };
+        },
+        processResults: function (data) {
+            return {
+                results: data.map((object) => ({
+                    id: object.id,
+                    text: object.nome
+                }))
+            };
+        },
+        cache: true
+    }
+});
