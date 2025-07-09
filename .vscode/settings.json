@@ -1,0 +1,12 @@
+{
+    "auto-close-tag.disableOnLanguage": [
+
+    ],
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-21",
+            "path": "/home/user/jdk/jdk-21",
+            "default": true
+        }
+    ]
+}
