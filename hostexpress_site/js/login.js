@@ -1,4 +1,4 @@
-import { showAlert } from "./utils";
+import { showAlert } from "./utils.js";
 
 async function Login(e) {
     e.preventDefault();
@@ -9,18 +9,26 @@ async function Login(e) {
     formData.append("EMAIL", $("#email").val());
     formData.append("SENHA", $("#senha").val());
 
-    let response = await fetch(`./banco/login.php`, {
+    const response = await fetch(`./db/login.php`, {
         body: formData,
         method: "POST"
     });
-    let data = await response.json();
+    const data = await response.json();
     
-    if(data.status !== false){
-      window.location.replace('http://127.0.0.1/hostexpress_site/');
+    if(data.status && data.type === "SHOP"){
+        $("#container").innerHTML = '';
+        $("#container").load('./php/shop/assets/shopContainer.php', (response, status, xhr) => {
+            if(status !== "success") console.log('Error on loading content: ', xhr.responseText);
+        })
+        $("#navbar").innerHTML = '';
+        $("#navbar").load('./php/shop/assets/shopNavbar.php', (response, status, xhr) => {
+            if (status !== "success") console.log('Error on loading content: ', xhr.responseText);
+        });
     }
-    else{
-      showAlert('error', 'Usuário ou senha incorretos!');
+    else if (data.status && data.type === "CLIENT") {
+        window.location.replace('http://127.0.0.1/hostexpress_site/');
     }
+    else showAlert('error', 'Usuário ou senha incorretos!');
 }   
 
 const senhaInput = document.getElementById("senha");

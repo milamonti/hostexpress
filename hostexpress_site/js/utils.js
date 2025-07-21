@@ -17,13 +17,17 @@ export function addCleave(id, type){
             blocks: [5, 3],
             delimiters: [ "-", ""]
         });
+    } else if (type === "cnpj"){
+        new Cleave(`#${id}`, {
+            numericOnly: true,
+            blocks: [2, 3, 3, 4, 2],
+            delimiters: [".", ".", "/", "-", ""]
+        });
     }
 }
 
 export function removeMask(str) {
-    str.replace(/\D/g, '');
-    str.replace(/^\ /,"");
-    return str;
+    return str.replace(/\D/g, '');
 }
 
 export function showAlert(type = 'info', title = 'Atenção', message = '', timer = 1500){
