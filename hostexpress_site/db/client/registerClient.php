@@ -8,12 +8,15 @@ $Conexao = Conexao::conectar();
 try {
     if (!isset($_POST)){
         Response::badRequest('Dados não informados');
-        exit;
+    }
+
+    if($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        Response::methodNotAllowed();
     }
 
     Client::registerClient($_POST);
 } catch (\PDOException $e) {
-    Response::sqlError($e);
+    Response::internalError($e->getMessage());
 } catch (\Exception $e) {
     Response::sendJson($e->getCode(), 'Erro ao registrar cliente: ' . $e->getMessage());
 }

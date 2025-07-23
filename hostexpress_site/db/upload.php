@@ -1,7 +1,6 @@
 <?php
 
 include_once '../conexao.php';
-require_once './modules/productManager.php';
 require_once './modules/shopManager.php';
 require_once './modules/responseManager.php';
 
@@ -32,8 +31,30 @@ try {
         Response::internalError('Erro ao enviar o arquivo');
     }
 } catch (\PDOException $e) {
-    Response::sqlError($e);
+    Response::internalError($e->getMessage());
 } catch(Exception $e){
     Response::sendJson($e->getCode(), $e->getMessage());
 }
 ?>
+
+/*
+ * Exemplo com AWS S3
+ *
+ */
+ /**require '/vendor/s3_config.php';
+
+$bucket = 'nome-do-seu-bucket';
+$arquivo = $_FILES['arquivo']['tmp_name'];
+$nomeArquivo = $_FILES['arquivo']['name'];
+
+try {
+    $result = $s3->putObject([
+        'Bucket' => $bucket,
+        'Key'    => $nomeArquivo,
+        'SourceFile' => $arquivo,
+        'ACL'    => 'public-read', // ou 'private'
+    ]);
+    echo "Arquivo enviado: " . $result['ObjectURL'];
+} catch (Aws\Exception\AwsException $e) {
+    echo "Erro: " . $e->getMessage();
+} */

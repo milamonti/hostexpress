@@ -12,107 +12,138 @@ class Client
      */
     public static function getAllClients(): void
     {
-        global $Conexao;
-
-        $query = "SELECT * FROM he_clientes";
-        $stmt = $Conexao->prepare($query);
-        $stmt->execute();
-
-        if ($stmt->rowCount() > 0) {
-            $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            Response::success($clients, 'Clientes buscados com sucesso');
-        } else {
-            Response::notFound('Nenhum cliente encontrado');
-        }
+        try {
+            global $Conexao;
+    
+            $query = "SELECT * FROM he_clientes";
+            $stmt = $Conexao->prepare($query);
+            $stmt->execute();
+    
+            if ($stmt->rowCount() > 0) {
+                $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                Response::success($clients, 'Clientes buscados com sucesso');
+            } else {
+                Response::notFound('Nenhum cliente encontrado');
+            }
+        } catch (PDOException $e) {
+            Response::internalError($e->getMessage());
+        } catch (Exception $e) {
+            Response::sendJson($e->getCode(), $e->getMessage());
+        } 
     }
 
     /**
      * 
      * Função que busca o cliente pelo e-mail já autenticado no login
-     * @param email
+     * @param email $email
      * @return void
      * 
      **/
     public static function getClientByEmail(String $email): void
     {
-        global $Conexao;
-
-        if (empty($email)) {
-            Response::badRequest('E-mail não informado');
-        }
-
-        $query = "
-            SELECT A.* 
-            FROM he_clientes A
-            INNER JOIN he_users B ON A.EMAIL = B.USER
-            WHERE B.USER = :email
-        ";
-        $stmt = $Conexao->prepare($query);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
-
-        if ($stmt->rowCount() > 0) {
-            $client = $stmt->fetch(PDO::FETCH_ASSOC);
-            Response::success($client, 'Cliente encontrado');
-        } else {
-            Response::notFound([], 'Cliente não encontrado');
-        }
+        try {
+            global $Conexao;
+    
+            if (empty($email)) {
+                Response::badRequest('E-mail não informado');
+            }
+    
+            $query = "
+                SELECT A.* 
+                FROM he_clientes A
+                INNER JOIN he_users B ON A.EMAIL = B.USER
+                WHERE B.USER = :email
+            ";
+            $stmt = $Conexao->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+    
+            if ($stmt->rowCount() > 0) {
+                $client = $stmt->fetch(PDO::FETCH_ASSOC);
+                Response::success($client, 'Cliente encontrado');
+            } else {
+                Response::notFound([], 'Cliente não encontrado');
+            }
+        } catch (PDOException $e) {
+            Response::internalError($e->getMessage());
+        } catch (Exception $e) {
+            Response::sendJson($e->getCode(), $e->getMessage());
+        } 
     }
 
     public static function updateClient(String $id)
     {
-        global $Conexao;
-    
-        $query = "
-            UPDATE he_clientes
-            SET NOME = :NOME, EMAIL = :EMAIL,
-                TELEFONE = :TELEFONE, CEP = :CEP,
-                ENDERECO = :ENDERECO, ENDERECO_NUM = :ENDERECO_NUM,
-                BAIRRO = :BAIRRO, CIDADE = :CIDADE
-            WHERE ID = :ID	
-        ";
-        $stm = $Conexao->prepare($query);
-        $stm->bindParam(':NOME', $NOME, PDO::PARAM_STR);
-        $stm->bindParam(':EMAIL', $EMAIL, PDO::PARAM_STR);
-        $stm->bindParam(':TELEFONE', $TELEFONE, PDO::PARAM_STR);
-        $stm->bindParam(':ENDERECO', $ENDERECO, PDO::PARAM_STR);
-        $stm->bindParam(':ENDERECO_NUM', $ENDERECO_NUM, PDO::PARAM_STR);
-        $stm->bindParam(':BAIRRO', $BAIRRO, PDO::PARAM_STR);
-        $stm->bindParam(':CIDADE', $CIDADE, PDO::PARAM_STR);
-        $stm->bindParam(':ID', $ID, PDO::PARAM_STR);
-        $stm->bindParam(':CEP', $CEP, PDO::PARAM_STR);
-        $stm->execute();
-        Response::success([], 'Cliente atualizado com sucesso');
+        try {
+            global $Conexao;
+        
+            $query = "
+                UPDATE he_clientes
+                SET NOME = :NOME, EMAIL = :EMAIL,
+                    TELEFONE = :TELEFONE, CEP = :CEP,
+                    ENDERECO = :ENDERECO, ENDERECO_NUM = :ENDERECO_NUM,
+                    BAIRRO = :BAIRRO, CIDADE = :CIDADE
+                WHERE ID = :ID	
+            ";
+            $stm = $Conexao->prepare($query);
+            $stm->bindParam(':NOME', $NOME, PDO::PARAM_STR);
+            $stm->bindParam(':EMAIL', $EMAIL, PDO::PARAM_STR);
+            $stm->bindParam(':TELEFONE', $TELEFONE, PDO::PARAM_STR);
+            $stm->bindParam(':ENDERECO', $ENDERECO, PDO::PARAM_STR);
+            $stm->bindParam(':ENDERECO_NUM', $ENDERECO_NUM, PDO::PARAM_STR);
+            $stm->bindParam(':BAIRRO', $BAIRRO, PDO::PARAM_STR);
+            $stm->bindParam(':CIDADE', $CIDADE, PDO::PARAM_STR);
+            $stm->bindParam(':ID', $ID, PDO::PARAM_STR);
+            $stm->bindParam(':CEP', $CEP, PDO::PARAM_STR);
+            $stm->execute();
+            Response::success([], 'Cliente atualizado com sucesso');
+        } catch (PDOException $e) {
+            Response::internalError($e->getMessage());
+        } catch (Exception $e) {
+            Response::sendJson($e->getCode(), $e->getMessage());
+        }
     }
 
     public static function deleteClient(String $id): void
     {
-        global $Conexao;
-
-        if (empty($id)) {
-            Response::badRequest('ID do cliente não informado');
-            return;
-        }
-
-        $query = "DELETE FROM he_clientes WHERE ID = :id";
-        $stmt = $Conexao->prepare($query);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-
-        if ($stmt->rowCount() > 0) {
-            Response::success([], 'Cliente deletado com sucesso');
-        } else {
-            Response::notFound([], 'Cliente não encontrado ou já deletado');
+        try {
+            global $Conexao;
+    
+            if (empty($id)) {
+                Response::badRequest('ID do cliente não informado');
+                return;
+            }
+    
+            $query = "DELETE FROM he_clientes WHERE ID = :id";
+            $stmt = $Conexao->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            if ($stmt->rowCount() > 0) {
+                Response::success([], 'Cliente deletado com sucesso');
+            } else {
+                Response::notFound([], 'Cliente não encontrado ou já deletado');
+            }
+        } catch (PDOException $e) {
+            Response::internalError($e->getMessage());
+        } catch (Exception $e) {
+            Response::sendJson($e->getCode(), $e->getMessage());
         }
     }
 
     public static function registerClient(array $data): void
     {
-        global $Conexao;
-
+        
         try {
+            global $Conexao;
+
             if($_SERVER['REQUEST_METHOD'] !== 'POST'){
                 Response::methodNotAllowed('Método inválido.');
+            }
+
+            foreach($data as $key => $value) {
+                if(empty($value)) {
+                    Response::badRequest("Campo ${key} não pode ser vazio");
+                }
             }
 
             $NOME = $data['NOME'];
@@ -168,7 +199,7 @@ class Client
             Response::success([], 'Cliente registrado com sucesso');
             
         } catch (PDOException $e) {
-            Response::sqlError($e);
+            Response::internalError($e->getMessage());
         } catch (Exception $e) {
             Response::sendJson($e->getCode(), 'Erro ao registrar cliente: ' . $e->getMessage());
         }
