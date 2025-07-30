@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 23/07/2025 às 02:14
+-- Tempo de geração: 30/07/2025 às 02:32
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `hostexpress`
 --
-CREATE DATABASE IF NOT EXISTS `hostexpress` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `hostexpress`;
 
 -- --------------------------------------------------------
 
@@ -96,29 +94,43 @@ CREATE TABLE `he_produtos` (
   `CATEGORIA` varchar(100) DEFAULT NULL,
   `UNIDADE` varchar(10) DEFAULT NULL,
   `QTD` int(11) NOT NULL,
-  `PRECO_UN` decimal(10,2) DEFAULT NULL
+  `PRECO_UN` decimal(10,2) DEFAULT NULL,
+  `FOTO_PRODUTO` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `he_produtos`
 --
 
-INSERT INTO `he_produtos` (`PRODUTO_ID`, `EMPRESA_ID`, `DESCRICAO`, `CATEGORIA`, `UNIDADE`, `QTD`, `PRECO_UN`) VALUES
-(1, 1, 'SACO DE CIMENTO', 'construção', 'KG', 50, 30.90),
-(16, 1, 'Cimento CP II-E 32', 'construção', 'saco', 50, 32.50),
-(17, 1, 'Areia Média Lavada', 'construção', 'm³', 1, 120.00),
-(18, 1, 'Brita 1', 'construção', 'm³', 1, 140.00),
-(19, 1, 'Tijolo Cerâmico 9 Furos', 'construção', 'unidade', 1, 0.85),
-(20, 1, 'Bloco de Concreto 14x39x19cm', 'construção', 'unidade', 1, 2.10),
-(21, 1, 'Vergalhão CA-50 10mm', 'construção', 'barra', 1, 32.00),
-(22, 1, 'Massa Corrida 25kg', 'construção', 'balde', 25, 55.90),
-(23, 1, 'Tinta Acrílica Branco Fosco 18L', 'construção', 'lata', 18, 165.00),
-(24, 1, 'Rejunte para Porcelanato 1kg', 'construção', 'saco', 1, 6.80),
-(25, 1, 'Argamassa AC-I 20kg', 'construção', 'saco', 20, 18.90),
-(26, 1, 'Tubulação PVC 100mm', 'construção', 'barra', 6, 59.00),
-(27, 1, 'Caixa d’Água 1000L', 'construção', 'unidade', 1, 490.00),
-(28, 1, 'Viga U Metálica 6m', 'construção', 'barra', 6, 230.00),
-(29, 1, 'Chapa de Madeira Compensada 15mm', 'construção', 'unidade', 1, 110.00);
+INSERT INTO `he_produtos` (`PRODUTO_ID`, `EMPRESA_ID`, `DESCRICAO`, `CATEGORIA`, `UNIDADE`, `QTD`, `PRECO_UN`, `FOTO_PRODUTO`) VALUES
+(1, 1, 'SACO DE CIMENTO', 'construção', 'KG', 50, 30.90, NULL),
+(16, 1, 'Cimento CP II-E 32', 'construção', 'saco', 50, 32.50, NULL),
+(17, 1, 'Areia Média Lavada', 'construção', 'm³', 1, 120.00, NULL),
+(18, 1, 'Brita 1', 'construção', 'm³', 1, 140.00, NULL),
+(19, 1, 'Tijolo Cerâmico 9 Furos', 'construção', 'unidade', 1, 0.85, NULL),
+(20, 1, 'Bloco de Concreto 14x39x19cm', 'construção', 'unidade', 1, 2.10, NULL),
+(21, 1, 'Vergalhão CA-50 10mm', 'construção', 'barra', 1, 32.00, NULL),
+(22, 1, 'Massa Corrida 25kg', 'construção', 'balde', 25, 55.90, NULL),
+(23, 1, 'Tinta Acrílica Branco Fosco 18L', 'construção', 'lata', 18, 165.00, NULL),
+(24, 1, 'Rejunte para Porcelanato 1kg', 'construção', 'saco', 1, 6.80, NULL),
+(25, 1, 'Argamassa AC-I 20kg', 'construção', 'saco', 20, 18.90, NULL),
+(26, 1, 'Tubulação PVC 100mm', 'construção', 'barra', 6, 59.00, NULL),
+(27, 1, 'Caixa d’Água 1000L', 'construção', 'unidade', 1, 490.00, NULL),
+(28, 1, 'Viga U Metálica 6m', 'construção', 'barra', 6, 230.00, NULL),
+(29, 1, 'Chapa de Madeira Compensada 15mm', 'construção', 'unidade', 1, 110.00, NULL),
+(33, 3, 'se pa vai ', 'alimentos', 'kg', 1, 1.00, NULL),
+(34, 3, 'se pa vai ', 'alimentos', 'kg', 1, 1.00, NULL),
+(35, 3, 'se pa vai ', 'alimentos', 'kg', 1, 1.00, NULL),
+(36, 3, 'se pa vai ', 'alimentos', 'kg', 1, 1.00, NULL),
+(37, 3, 'se pa vai ', 'alimentos', 'kg', 1, 1.00, NULL),
+(38, 3, 'se pa vai ', 'alimentos', 'kg', 1, 1.00, NULL),
+(39, 3, 'se pa vai ', 'alimentos', 'kg', 1, 1.00, NULL),
+(40, 3, 'produtinho', 'alimentos', 'Kg', 1, 0.25, NULL),
+(41, 3, 'produtinho', 'alimentos', 'Kg', 1, 0.25, NULL),
+(42, 3, 'certeza que vai ', 'alimentos', 'Kg', 5, 6.50, NULL),
+(43, 3, 'com foto', 'alimentos', 'Kg', 7, 4.50, NULL),
+(44, 3, 'por favor', 'alimentos', 'KG', 43432, 545.00, NULL),
+(45, 3, 'agora tem que ir', 'alimentos', 'Kg', 1, 4.50, 'photo_45.png');
 
 -- --------------------------------------------------------
 
@@ -192,7 +204,7 @@ ALTER TABLE `he_empresas`
 -- AUTO_INCREMENT de tabela `he_produtos`
 --
 ALTER TABLE `he_produtos`
-  MODIFY `PRODUTO_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `PRODUTO_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

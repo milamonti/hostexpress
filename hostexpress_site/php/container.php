@@ -33,29 +33,27 @@
 
     <!--Carousel Images-->
     <div id="carouselImages" class="carousel slide w-100" data-bs-ride="carousel" style="height: 200px;">
-        <div class="carousel-inner">
-                <div class="carousel-item active">
-                <img src="./assets/logo.png" class="d-block w-100" alt="..." height="100">
-                </div>
-                <div class="carousel-item">
-                <img src="./assets/logo.png" class="d-block w-100" alt="..." height="100">
-                </div>
-                <div class="carousel-item">
-                <img src="./assets/logo.png" class="d-block w-100" alt="..." height="100">
-                </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="./assets/logo.png" class="d-block w-100" alt="..." height="100">
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"><i class="bi bi-arrow-left text-dark mx-0" style="font-size:30px;"></i></span>
-                <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"><i class="bi bi-arrow-right text-dark mx-0" style="font-size:30px;"></i></span>
-                <span class="visually-hidden">Next</span>
-        </button>
+        <div class="carousel-item">
+          <img src="./assets/logo.png" class="d-block w-100" alt="..." height="100">
+        </div>
+        <div class="carousel-item">
+          <img src="./assets/logo.png" class="d-block w-100" alt="..." height="100">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"><i class="bi bi-arrow-left text-dark mx-0" style="font-size:30px;"></i></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"><i class="bi bi-arrow-right text-dark mx-0" style="font-size:30px;"></i></span>
+        <span class="visually-hidden">Next</span>
+      </button>
     </div>
     <!--/Carousel Images-->
     
 </div>
 <!--/Container-->
-
-<script type="module" src="./js/index.js?a=<?php echo microtime(); ?>"></script>

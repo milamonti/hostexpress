@@ -1,14 +1,13 @@
 $(document).ready(() => {
-    $(".nav-pills button").each(function() {
-        $(this).on("click", function() {
-            if(!$(this).hasClass("active")) {
-                $(".nav-pills button").removeClass("active");
-                $(".nav-pills button").removeAttr("aria-current");
-                $(this).addClass("active");
-                $(this).attr("aria-current", "page");
-                LoadPage($(this).attr("page"));
-            }
-        });
+  $(".nav-pills button").each(function() {
+    $(this).on("click", function() {
+      $(".nav-pills button").removeClass("active");
+      $(this).addClass("active");
+      loadPage($(this).attr("page"));
     });
-    
+  }); 
 });
+
+window.Logout = async () => {
+  await fetch(`./database/api/logout.php`).finally(reloadPage);
+}

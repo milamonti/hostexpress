@@ -4,13 +4,12 @@ export default class Cart {
         $("#modalCart .modal-body, #modalCart .modal-title").empty();
         $("#modalCart .modal-title").text("Carrinho de Compras");
         if (carrinho.length === 0) {
-            $(".modal-body").html(`<p class='text-center'>O carrinho está vazio.</p>`);
-            return;
+            return $(".modal-body").html(`<p class='text-center'>O carrinho está vazio.</p>`);
         }
 
         let totalGeral = 0;
         carrinho.forEach((item) => {
-            const quantidade = item.quantidade || 1;
+            const quantidade = Number(item.quantidade) || 1;
             const precoUnitario = parseFloat(item.PRECO_UN) || 0;
             const totalItem = precoUnitario * quantidade;
             totalGeral += totalItem;
@@ -21,12 +20,13 @@ export default class Cart {
                         <h6 class="mb-0">${item.DESCRICAO}</h6>
                         <small>${quantidade} x R$${precoUnitario.toFixed(2)} = R$${totalItem.toFixed(2)}</small>
                     </div>
-                    <button id="remove_${item.PRODUTO_ID}" class="btn btn-sm btn-outline-danger">Remover</button>
+                    <button data-id="${item.PRODUTO_ID}" class="btn btn-sm btn-outline-danger btn-remove-item">Remover</button>
                 </div>
             `);
-            $(`#remove_${item.PRODUTO_ID}`).on('click', () => {
-                this.removeItem(item.PRODUTO_ID);
-            });
+        });
+        $(".modal-body").off("click", ".btn-remove-item").on("click", ".btn-remove-item", (e) => {
+            const id = parseInt($(e.currentTarget).data("id"));
+            this.removeItem(id);
         });
 
         $(".modal-body").append(`
@@ -38,7 +38,7 @@ export default class Cart {
 
     removeItem(id) {
         let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-        carrinho = carrinho.filter(item => item.PRODUTO_ID !== id);
+        carrinho = carrinho.filter((item) => item.PRODUTO_ID !== id);
         localStorage.setItem("carrinho", JSON.stringify(carrinho));
         this.updateCartBadge();
         this.openCart();
@@ -56,14 +56,12 @@ export default class Cart {
         let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
         let total = carrinho.reduce((sum, item) => sum + item.quantidade, 0);
     
-        if( total > 0) {
-            $("#carrinho").removeClass("d-none");
-        }
+        if( total > 0) $("#carrinho").removeClass("d-none");
 
         $("#carrinho").text(total > 0 ? total > 99 ? '99+' : total : $("#carrinho").addClass("d-none"));
     };
 
-    addToCart(id, descricao, quantidade, preco) {
+    addToCart(id, descricao, preco, quantidade = 1) {
         let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
         let existente = carrinho.find(item => item.PRODUTO_ID === id);
@@ -81,17 +79,14 @@ export default class Cart {
             )
         } 
         else {
-            carrinho.push(
-                {
-                    PRODUTO_ID: id,
-                    DESCRICAO: descricao,
-                    PRECO_UN: parseFloat(preco),
-                    quantidade: quantidade || 1
-                }
-            );
+            carrinho.push({
+                PRODUTO_ID: id,
+                DESCRICAO: descricao,
+                PRECO_UN: parseFloat(preco),
+                quantidade: quantidade
+            });
         }
         localStorage.removeItem("carrinho");
-        localStorage.setItem("carrinho", JSON.stringify([]));
         localStorage.setItem("carrinho", JSON.stringify(carrinho));
         this.updateCartBadge();
     }

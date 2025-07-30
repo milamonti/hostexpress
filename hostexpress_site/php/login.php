@@ -19,7 +19,7 @@
         <h5 class="fs-1 fw-bold p-0 text-center">Ainda não se cadastrou?</h5>
         <hr>
         <p class="text-muted text-center">Crie sua conta para aproveitar todas as promoções, realizar e acompanhar seus pedidos!</p>
-        <button class="btn btn-outline-primary align-self-center" onclick="LoadPage('register')">Cadastre-se</button>
+        <button class="btn btn-outline-primary align-self-center" onclick="loadPage('register')">Cadastre-se</button>
     </div>
 </div>
 

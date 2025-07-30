@@ -1,4 +1,10 @@
-<?php session_start(); ?>
+<?php
+
+require_once 'database/config/config.php';
+include_once 'database/modules/authManager.php';
+$auth = new Auth();
+
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -7,11 +13,11 @@
     <title>HostExpress</title>
     <link rel="shortcut icon" type="image/x-icon" href="./assets/caminhaobranco-removebg-preview.ico">
 
-	<!--Helpers-->
+	  <!--Helpers-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
-	<!--Icons-->
+	  <!--Icons-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
     <style>
@@ -43,30 +49,54 @@
 		#container {
 			flex: 1;
 		}
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.2);
+      pointer-events: all;
+      z-index: 2;
+      transition: 0.3s;
+      animation: pulseOverlay 3s infinite ease-in-out;
+    }
+    @keyframes pulseOverlay {
+      0%, 100% {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+      50% {
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+    }
   	</style>
 
 </head>
 <body class="d-flex flex-column align-items-center w-100">
   
-    <!--Navbar -->
-    <?php 
-		$_SESSION["TYPE"] != "SHOP"
-			? include_once 'php/navbar.php' 
-			: include_once 'shop/shopNavbar.php';
+  <!--Navbar -->
+  <?php 
+    if(($auth->isLoggedIn() && !$auth->hasRole('SHOP')) || !$auth->isLoggedIn()) {
+      include_once 'php/navbar.php'; 
+    } else {
+      include_once 'php/shop/assets/shopNavbar.php';
+    }
 	?>
-    <!--/Navbar-->
+  <!--/Navbar-->
 
 	<!--Container --> 
-	<?php $_SESSION['TYPE'] != "SHOP" 
-		? include_once 'php/container.php'
-		: include_once 'shop/shopContainer.php'; 
-	?>
+  <div id="container" class="container">
+    <?php 
+      if(($auth->isLoggedIn() && !$auth->hasRole('SHOP')) || !$auth->isLoggedIn()) {
+        include_once 'php/container.php';
+      } else {
+        include_once 'php/shop/assets/shopContainer.php';
+      }
+    ?>
+  </div>
 	<!--/Container-->
 
 
-    <!--Footer --> 
-    <?php include_once 'php/footer.php'; ?>
-    <!--/Footer-->
+  <!--Footer --> 
+  <?php include_once 'php/footer.php'; ?>
+  <!--/Footer-->
 
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
@@ -76,38 +106,46 @@
 	<script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
-
+    
 	<script>
-
-		function LoadPage(name){
-			$(".modal").modal('hide');
+        
+    function loadPage(name){
+      $(".modal").modal('hide');
 			$("#container").innerHTML = '';
 			$('#container').load('./php/' + name + '.php', (response, status, xhr) => {
-				if (status != 'success') {
-					console.error('Error on loading content:', xhr.statusText);
+        if (status != 'success') {
+          console.error('Error on loading content:', xhr.statusText);
 				}
 			});
 		}
 		
 		function reloadPage(){
-			location.reload();
+      location.reload();
 		}
 		
-	</script>
+  </script>
+
+  <?php 
+    if(($auth->isLoggedIn() && !$auth->hasRole('SHOP')) || !$auth->isLoggedIn()) {
+      echo '<script type="module" src="./js/main.js?a=<?php echo microtime(true); ?>"></script>';
+    } else {
+      echo '<script src="./js/shop/main.js?a=<?php echo microtime(true); ?>"></script>';
+    }
+  ?>
 	
 </body>
 
 <!-- Product Modal -->
 <div class="modal fade" id="modalProduct" tabindex="-1" aria-labelledby="modalProduct" aria-hidden="true">
-  	<div class="modal-dialog modal-dialog-centered modal-lg">
-    	<div class="modal-content">
-      		<div class="modal-header">
-        		<h5 class="modal-title"></h5>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-      		</div>
-      		<div class="modal-body"></div>
-    	</div>
-  	</div>
+      </div>
+      <div class="modal-body"></div>
+    </div>
+  </div>
 </div>
 
 <!-- Cart Modal -->
@@ -121,7 +159,7 @@
       		<div class="modal-body"></div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-outline-danger" id="btn-reset">Esvaziar Carrinho</button>
-        		<button type="button" class="btn btn-primary" onclick="LoadPage('client/cart')">Finalizar Compra</button>
+        		<button type="button" class="btn btn-primary" onclick="loadPage('client/cart')">Finalizar Compra</button>
       		</div>
     	</div>
     </div>

@@ -29,7 +29,7 @@
                             <i class="bi bi-person-circle fs-4 me-2"></i><?php echo htmlspecialchars($_SESSION['USUARIO']) ?>
                             </div>
                             <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" onclick="LoadPage('client/clientAccount')">
+                            <li><a class="dropdown-item" onclick="loadPage('client/clientAccount')">
                                 Minha Conta
                             </a></li>
                             <li><a class="dropdown-item" onclick="Logout()">Sair</a></li>
@@ -37,11 +37,11 @@
                         </div>
                     <?php else: ?>
                         <div class="text-center mx-3 d-flex flex-column justify-content-center align-items-center">
-                            <button type="button" id="btn-login" class="btn btn-outline-light mx-2 d-inline-flex align-items-center" style="border:none;">
+                            <button type="button" id="btn-login" onclick='loadPage("login")' class="btn btn-outline-light mx-2 d-inline-flex align-items-center" style="border:none;">
                                 <i class="bi bi-person-circle me-2"></i>Entrar
                             </button>
                             <span class="text-white">ou</span>
-                            <button type="button" id="btn-cadastrar" class="btn btn-outline-light d-inline-flex align-items-center mx-3" style="border:none;">
+                            <button type="button" id="btn-cadastrar" onclick="loadPage('register')" class="btn btn-outline-light d-inline-flex align-items-center mx-3" style="border:none;">
                                 <i class="bi bi-person-plus me-2"></i>Cadastrar
                             </button>
                         </div>
