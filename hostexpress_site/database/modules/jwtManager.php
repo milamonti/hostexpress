@@ -11,7 +11,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Firebase\JWT\ExpiredException;
 
-class Sim
+class User
 {
   private string $secretKey;
   private string $issuer = 'https://hostexpress.ct.ws';
@@ -24,6 +24,9 @@ class Sim
 
   /**
    * Gera e retorna o token JWT com dados do usuário
+   * @param userData array contendo as informações de login do usuário
+   * @return token uma string codificada em JWT 
+   * contendo as informações da sessão do usuário  
    */
   public function generateToken(array $userData): string
   {
@@ -58,6 +61,8 @@ class Sim
 
   /**
    * Retorna um campo específico do token
+   * @param field Recebe o campo que será buscado
+   * @return Response Retorna em array a chave e valor do campo buscado
    */
   public function getTokenField(string $field): void
   {

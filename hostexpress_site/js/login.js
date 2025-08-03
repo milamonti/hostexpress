@@ -1,13 +1,16 @@
 import { fetchConfig, showAlert, toggleInput } from "./utils.js";
 
 $(document).ready(() => {
+  // Adiciona o event listener de visualizar a senha
   toggleInput("icone");
 });
 
+// Expõe globalmente a função de Login
 window.Login = async (e) => {
   e.preventDefault();
   if (!$("#email").val() || !$("#senha").val()) {
-    return showAlert("error", "Insira seu usuário e senha!");
+    showAlert("error", "Insira seu usuário e senha!");
+    return;
   }
   const formData = new FormData();
   formData.append("EMAIL", $("#email").val());
@@ -16,7 +19,10 @@ window.Login = async (e) => {
   await fetch("./database/api/login.php", fetchConfig("POST", formData))
   .then((response) => response.json())
   .then((result) => {
-    if(!result.success) return showAlert("error", result.message);
+    if(!result.success) {
+      showAlert("error", result.message);
+      return;
+    }
     reloadPage();
   });
 }

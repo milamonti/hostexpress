@@ -191,18 +191,18 @@ class Shop
         (CNPJ, ATIVO, RAZAO_SOCIAL, NOME_FANTASIA, TELEFONE, ENDERECO, ENDERECO_NUM, CIDADE, BAIRRO, CEP, COMPLEMENTO, EMAIL, ESPECIALIDADE)
         VALUES (:CNPJ, 'S', :RAZAO_SOCIAL, :NOME, :TELEFONE, :ENDERECO, :ENDERECO_NUM, :CIDADE, :BAIRRO, :CEP, :COMPLEMENTO, :EMAIL, :ESPECIALIDADE)";
       $stmt1 = $conexao->prepare($sql1);
-      $stmt1->bindParam(':CNPJ', $CNPJ, PDO::PARAM_STR);
-      $stmt1->bindParam(':RAZAO_SOCIAL', $RAZAO_SOCIAL, PDO::PARAM_STR);
-      $stmt1->bindParam(':NOME', $NOME, PDO::PARAM_STR);
-      $stmt1->bindParam(':TELEFONE', $TELEFONE, PDO::PARAM_STR);
-      $stmt1->bindParam(':ENDERECO', $ENDERECO, PDO::PARAM_STR);
-      $stmt1->bindParam(':ENDERECO_NUM', $ENDERECO_NUM, PDO::PARAM_STR);
-      $stmt1->bindParam(':CIDADE', $CIDADE, PDO::PARAM_STR);
-      $stmt1->bindParam(':BAIRRO', $BAIRRO, PDO::PARAM_STR);
-      $stmt1->bindParam(':CEP', $CEP, PDO::PARAM_STR);
-      $stmt1->bindParam(':COMPLEMENTO', $COMPLEMENTO, PDO::PARAM_STR);
-      $stmt1->bindParam(':EMAIL', $EMAIL, PDO::PARAM_STR);
-      $stmt1->bindParam(':ESPECIALIDADE', $ESPECIALIDADE, PDO::PARAM_STR);
+      $stmt1->bindParam(':CNPJ', $data['CNPJ'], PDO::PARAM_STR);
+      $stmt1->bindParam(':RAZAO_SOCIAL', $data['RAZAO_SOCIAL'], PDO::PARAM_STR);
+      $stmt1->bindParam(':NOME', $data['NOME'], PDO::PARAM_STR);
+      $stmt1->bindParam(':TELEFONE', $data['TELEFONE'], PDO::PARAM_STR);
+      $stmt1->bindParam(':ENDERECO', $data['ENDERECO'], PDO::PARAM_STR);
+      $stmt1->bindParam(':ENDERECO_NUM', $data['ENDERECO_NUM'], PDO::PARAM_STR);
+      $stmt1->bindParam(':CIDADE', $data['CIDADE'], PDO::PARAM_STR);
+      $stmt1->bindParam(':BAIRRO', $data['BAIRRO'], PDO::PARAM_STR);
+      $stmt1->bindParam(':CEP', $data['CEP'], PDO::PARAM_STR);
+      $stmt1->bindParam(':COMPLEMENTO', $data['COMPLEMENTO'], PDO::PARAM_STR);
+      $stmt1->bindParam(':EMAIL', $data['EMAIL'], PDO::PARAM_STR);
+      $stmt1->bindParam(':ESPECIALIDADE', $data['ESPECIALIDADE'], PDO::PARAM_STR);
       $stmt1->execute();
 
       // Insere na tabela he_users

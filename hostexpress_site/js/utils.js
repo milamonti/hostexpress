@@ -53,10 +53,16 @@ export function formatDate(date){
   return dateObj;
 }
 
-export const fetchConfig = (method, body) => { 
-  return {
-    method: method,
-    body: body
+export const fetchConfig = (method, body = null) => { 
+  if(body === null) {
+    return {
+      method: method
+    }
+  } else {
+    return {
+      method: method,
+      body: body
+    }
   }
 }
 
@@ -88,12 +94,12 @@ export function mostrarLoading(element_id) {
 export function ocultarLoading(element_id) {
   $(`${element_id} .overlay`).addClass("opacity-0");
   setTimeout(() => {
-      $(`${element_id} .overlay`).addClass("d-none");
+    $(`${element_id} .overlay`).addClass("d-none");
   }, 300);
 }
 
 export const toggleInput = (id) => {
-    $(`#${id}`).on("click", function () {
+  $(`#${id}`).on("click", function () {
     const senhaInput = $("#senha");
     const isPassword = senhaInput.attr("type") === "password";
 
@@ -105,7 +111,9 @@ export const toggleInput = (id) => {
 }
 
 /**
- * Função de mostra um SweetAlert de acordo com a requisição realizada anteriormente
+ * Função que mostra um SweetAlert de acordo 
+ * com a requisição realizada anteriormente
+ * 
  * @param response JSON de resposta da requisição
  */
 export const handleResponse = (response) => {
@@ -116,3 +124,18 @@ export const handleResponse = (response) => {
     2000
   );
 };
+
+/**
+ * Define a função de logout globalmente
+ */
+window.Logout = async () => {
+  await fetch("./database/api/logout.php")
+  .then((response) => response.json())
+  .then((result) => {
+    if(!result.success) {
+      showAlert("error", "Erro!", result.message);
+      return;
+    }
+    reloadPage();
+  });
+}

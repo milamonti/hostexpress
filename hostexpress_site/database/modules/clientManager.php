@@ -7,30 +7,30 @@ $Conexao = Conexao::conectar();
 
 class Client 
 {
-    /**
-     * Função para buscar todos os clientes
-     */
-    public static function getAllClients(): void
-    {
-        try {
-            global $Conexao;
-    
-            $query = "SELECT * FROM he_clientes";
-            $stmt = $Conexao->prepare($query);
-            $stmt->execute();
-    
-            if ($stmt->rowCount() > 0) {
-                $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                Response::success($clients, 'Clientes buscados com sucesso');
-            } else {
-                Response::notFound('Nenhum cliente encontrado');
-            }
-        } catch (PDOException $e) {
-            Response::internalError($e->getMessage());
-        } catch (Exception $e) {
-            Response::sendJson($e->getCode(), $e->getMessage());
-        } 
-    }
+  /**
+   * Função para buscar todos os clientes
+   */
+  public static function getAllClients(): void
+  {
+    try {
+      global $Conexao;
+
+      $query = "SELECT * FROM he_clientes";
+      $stmt = $Conexao->prepare($query);
+      $stmt->execute();
+  
+      if ($stmt->rowCount() > 0) {
+        $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        Response::success($clients, 'Clientes buscados com sucesso');
+      } else {
+        Response::notFound('Nenhum cliente encontrado');
+      }
+    } catch (PDOException $e) {
+      Response::internalError($e->getMessage());
+    } catch (Exception $e) {
+      Response::sendJson($e->getCode(), $e->getMessage());
+    } 
+  }
 
     /**
      * 

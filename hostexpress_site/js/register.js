@@ -33,11 +33,11 @@ $(document).ready(function() {
 
 async function buscaCep() {
   $("#cep").removeAttr("style");
-  if ($("#cep").val().length < 9) {
+  const cep = removeMask($("#cep").val());
+  if (cep.length !== 8) {
     showAlert("warning", "Digite um CEP válido!");
     return;
   }
-  const cep = removeMask($("#cep").val());
 
   try {
     const address = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
@@ -144,11 +144,15 @@ async function verifyCode(email, body) {
     inputPlaceholder: "Insira o código",
     inputValidator: value => {
       if (!value) return "Digite o código!";
+      if (value.length !== 6) return "O código enviado é de 6 dígitos!"
       if (value && Number(value) !== code) return "Código incorreto!";
     }
   });
   if (verification) {
-    if ($("#shopInfo").hasClass("d-none")) registerClient(body);
-    else registerShop(body);
+    if ($("#shopInfo").hasClass("d-none")) {
+      registerClient(body);
+    } else {
+      registerShop(body);
+    }
   }
 }

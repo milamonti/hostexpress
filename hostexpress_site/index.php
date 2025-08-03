@@ -117,12 +117,17 @@ $auth = new Auth();
 
 	<script>
         
-    function loadPage(name){
+    function loadPage(path, params = {}){
       $(".modal").modal('hide');
-			$("#container").innerHTML = '';
-			$('#container').load('./php/' + name + '.php', (response, status, xhr) => {
+			$("#container").html('');
+      
+      const queryString = new URLSearchParams(params).toString();
+      const url = `./php/${path}.php${queryString ? '?' + queryString : ''}`;
+
+			$('#container').load(url, (response, status, xhr) => {
         if (status != 'success') {
           console.error('Error on loading content:', xhr.statusText);
+          return;
 				}
 			});
 		}
