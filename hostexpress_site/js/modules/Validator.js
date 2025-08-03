@@ -30,4 +30,35 @@ export default class Validator {
     error.text("");
     $(field).css("border-color", "");
   }
+
+  static validateFields(form) {
+    let filled = true;
+    for (const field of form.elements) {
+      // Ignora botão ou elementos sem name
+      if (field.tagName === "BUTTON" || !field.name) continue;
+    
+      if (!field.value.trim()) {
+        field.style.borderColor = "red";
+        filled = false;
+        console.warn(`Campo "${field.name}" está vazio.`);
+      }
+      if(field.name === "CPF" && !validator.validarCPF(field.value.trim())){
+        validator.createErrorMsg(field, "cpf");
+        filled = false;
+      } else if (field.name === "CNPJ" && !validator.validarCNPJ(field.value.trim())){
+        validator.createErrorMsg(field, "cnpj");
+        filled = false;
+      } else if (field.name === "EMAIL" && !validator.validarEmail(field.value.trim())){
+        validator.createErrorMsg(field, "email");
+        filled = false;
+      } else if (field.name === "TELEFONE" && !validator.validarTelefone(field.value.trim())){
+        validator.createErrorMsg(field, "telefone");
+        filled = false;
+      } else {
+        validator.clearError(field);
+      }
+    }
+    
+    return filled;
+  }
 }

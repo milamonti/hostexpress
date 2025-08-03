@@ -4,9 +4,11 @@ define('ROOT', dirname(__DIR__, 2));
 
 require_once ROOT . '/vendor/autoload.php';
 
+// Carrega as informações do arquivo .env 
 $dotenv = Dotenv\Dotenv::createImmutable(ROOT);
 $dotenv->load();
 
+// Define as variáveis do banco
 $dbHost = getenv('host');
 $dbUser = getenv('user');
 $dbPass = getenv('password');

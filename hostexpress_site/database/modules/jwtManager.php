@@ -19,11 +19,13 @@ class User
   private int $tokenLifetime = 3600; // 1 hora
 
   public function __construct() {
-    $this->$secretKey = getenv('secretKey');
+    $this->secretKey = getenv('secretKey');
   }
 
   /**
    * Gera e retorna o token JWT com dados do usuário
+   * O mesmo é utilizado no localStorage do navegador
+   * para requisições futuras do usuário
    * @param userData array contendo as informações de login do usuário
    * @return token uma string codificada em JWT 
    * contendo as informações da sessão do usuário  
@@ -84,6 +86,11 @@ class User
     }
   }
 
+  /**
+   * Busca o token enviado no header da requisição
+   * @return token Retorna o token enviado,
+   * ou envia um erro 401 de não autorizado
+   */
   public function getTokenFromHeader(): ?string
   {
     $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';

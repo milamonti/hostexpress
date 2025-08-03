@@ -114,6 +114,7 @@ $auth = new Auth();
 	<script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/multiform-validator@2.6.1/dist/index.min.js"></script>
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
 
 	<script>
         

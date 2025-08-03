@@ -71,31 +71,7 @@ $("#clientForm").on("submit", function(e) {
   const form = this;
   const formData = new FormData(form);
   
-  let filled = true;
-  for (const field of form.elements) {
-    // Ignora botão ou elementos sem name
-    if (field.tagName === "BUTTON" || !field.name) continue;
-
-    if (!field.value.trim()) {
-      field.style.borderColor = "red";
-      filled = false;
-      console.warn(`Campo "${field.name}" está vazio.`);
-    }
-    if(field.name === "CPF" && !validator.validarCPF(field.value.trim())){
-      validator.createErrorMsg(field, "cpf");
-    } else if (field.name === "CNPJ" && !validator.validarCNPJ(field.value.trim())){
-      validator.createErrorMsg(field, "cnpj");
-    } else if (field.name === "EMAIL" && !validator.validarEmail(field.value.trim())){
-      validator.createErrorMsg(field, "email")
-    } else if (field.name === "TELEFONE" && !validator.validarTelefone(field.value.trim())){
-      validator.createErrorMsg(field, "telefone");
-    } else {
-      validator.clearError(field);
-    }
-  }
-
-  if (filled) {
-    console.log("Todos os campos foram preenchidos!");
+  if(validator.validateFields(formData)) {
     verifyCode(formData.get("EMAIL"), formData);
   }
 });
