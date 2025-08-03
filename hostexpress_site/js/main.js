@@ -30,22 +30,22 @@ $("#search").select2({
   placeholder: "Pesquise por produtos ou lojas ...",
   minimumInputLength: 2,
   ajax: {
-    url: "./database/api/buscar_resultados.php",
+    url: "./database/api/getResults.php",
     dataType: "json",
     delay: 250,
     data: (params) => {
       return {
-        busca: params.term,
-      };
+        busca: params.term
+      }
     },
     processResults: (data) => {
       return {
         results: data.map((object) => ({
-          id: object.id,
-          text: object.nome,
-        })),
-      };
+          id: object.data.id,
+          text: object.data.nome,
+        }))
+      }
     },
-    cache: true,
-  },
+    cache: true
+  }
 });
