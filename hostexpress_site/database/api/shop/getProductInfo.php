@@ -3,12 +3,6 @@
 require_once '../../config/config.php';
 include_once ROOT . '/database/modules/responseManager.php';
 include_once ROOT . '/database/modules/shopManager.php';
-include_once ROOT . '/database/modules/authManager.php';
-$auth = new Auth();
-
-if(!$auth->isLoggedIn()) {
-  Response::unauthorized();
-}
 
 try {
   if ($_SERVER['REQUEST_METHOD'] !== 'GET') {

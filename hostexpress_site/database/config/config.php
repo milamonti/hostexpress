@@ -2,19 +2,29 @@
 // Caminho absoluto da raiz do projeto
 define('ROOT', dirname(__DIR__, 2));
 
+require_once ROOT . '/vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(ROOT);
+$dotenv->load();
+
+$dbHost = getenv('host');
+$dbUser = getenv('user');
+$dbPass = getenv('password');
+$dbName = getenv('dbname');
+
 // Timezone padrão
 date_default_timezone_set('America/Sao_Paulo');
 
 // Modo para conectar no banco de dados
-define('MODE', "xampp"); //xampp ou host
+define('XAMPP', true); // true ou false
 
 // Configurações do banco de dados
-define('DB_HOST', MODE == "xampp" ? "localhost" : "sql213.infinityfree.com");
-define('DB_USER', MODE == "xampp" ? "root" : "if0_38874089");
-define('DB_PASSWORD', MODE == "xampp" ? "" : "hostexpress2025");
-define('DB_NAME', MODE == "xampp" ? "hostexpress" : "if0_38874089_hostexpress");
+define('DB_HOST', XAMPP ? "localhost" : $dbHost);
+define('DB_USER', XAMPP ? "root" : $dbUser);
+define('DB_PASSWORD', XAMPP ? "" : $dbPass);
+define('DB_NAME', XAMPP ? "hostexpress" : $dbName);
 define('DB_DRIVER', "mysql");
-define('CHARSET', MODE == "xampp" ? "utf8" : "utf8mb4");
+define('CHARSET', XAMPP ? "utf8" : "utf8mb4");
 
 // URL base
 define('BASE_URL', 'https://hostexpress.ct.ws');

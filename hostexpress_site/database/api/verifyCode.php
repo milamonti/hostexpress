@@ -5,43 +5,36 @@ if(session_status() == PHP_SESSION_NONE){
 }
 
 require_once '../config/config.php';
-require '../../PHPMailer/PHPMailer.php';
-require '../../PHPMailer/SMTP.php';
-require '../../PHPMailer/Exception.php';
+require_once ROOT . '/database/modules/responseManager.php';
+require ROOT . '/libs/PHPMailer/PHPMailer.php';
+require ROOT . '/libs/PHPMailer/SMTP.php';
+require ROOT . '/libs/PHPMailer/Exception.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-header('Content-Type: application/json');
 
 $code = $_POST['CODE'];
 $email = $_POST['EMAIL'];
 
 $mail = new PHPMailer(true);
 try {
-    $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com';
-    $mail->SMTPAuth = true;
-    $mail->Username = 'hostexpressjundiai@gmail.com';
-    $mail->Password = 'kwvs ukak jgel gjvi'; 
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = 587;
+  $mail->isSMTP();
+  $mail->Host = 'smtp.gmail.com';
+  $mail->SMTPAuth = true;
+  $mail->Username = 'hostexpressjundiai@gmail.com';
+  $mail->Password = 'kwvs ukak jgel gjvi'; 
+  $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+  $mail->Port = 587;
 
-    $mail->setFrom('hostexpressjundiai@gmail.com', 'HostExpress');
-    $mail->addAddress($email);
+  $mail->setFrom('hostexpressjundiai@gmail.com', 'HostExpress');
+  $mail->addAddress($email);
 
-    $mail->isHTML(true);
-    $mail->Subject = 'Código de Verificação - HostExpress';
-    $mail->Body = "Olá! Seja bem-vindo ao HostExpress! Seu código de verificação é: <strong>$code</strong>";
-    $mail->send();
+  $mail->isHTML(true);
+  $mail->Subject = 'Código de Verificação - HostExpress';
+  $mail->Body = "Olá! Seja bem-vindo ao HostExpress! Seu código de verificação é: <strong>$code</strong>";
+  $mail->send();
 
-    exit(json_encode([
-        'status' => true
-    ]));
+  Response::success([], 'Código enviado!');
 } catch (\Exception $e) {
-    http_response_code($e instanceof PDOException ? (500) : $e->getCode());
-    exit(json_encode([
-        'status' => false,
-        'message' => 'Error on sending code: '. $e->getMessage() . ' on line ' .$e->getLine()
-    ]));
+  Response::sendJson($e->getCode(), 'Erro ao enviar o código: ' . $e->getMessage());
 }

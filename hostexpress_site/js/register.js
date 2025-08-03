@@ -1,46 +1,49 @@
-import { addCleave, fetchConfig, removeMask, showAlert } from "./utils.js";
+import { addCleave, fetchConfig, handleResponse, removeMask, showAlert, toggleInput } from "./utils.js";
+import validator from "./modules/Validator.js";
 
-addCleave("telefone", "phone");
-addCleave("cep", "cep");
-addCleave("cnpj", "cnpj");
+$(document).ready(function() {
+  //Adiciona as cleaves
+  addCleave("telefone", "phone");
+  addCleave("cep", "cep");
+  addCleave("cnpj", "cnpj");
 
-const senhaInput = document.getElementById("senha");
-const icone = document.getElementById("icone");
-
-icone.addEventListener("click", () => {
-  const isPassword = senhaInput.type === "password";
-  senhaInput.type = isPassword ? "text" : "password";
-
-  icone.classList.toggle("bi-eye");
-  icone.classList.toggle("bi-eye-slash");
+  //Event Listeners
+  toggleInput("icone");
+  $("#searchcep").on("click", buscaCep);
+  
+  $('input[name="account-type"]').on("change", () => {
+    if ($("#shop").is(":checked")) {
+      $("#shopInfo").removeClass("d-none");
+      $('label[for="nome"]').text("Nome Fantasia");
+      $("#cnpj").prop("disabled", false);
+      $("#razao-fantasia").prop("disabled", false);
+      $("#especialidade").prop("disabled", false);
+    } else {
+      $("#shopInfo").addClass("d-none");
+      $("#cnpj").prop("disabled", true);
+      $("#razao-fantasia").prop("disabled", true);
+      $("#especialidade").prop("disabled", true);
+    }
+  });
+  
+  $("#cep").on("input", () => {
+    if ($("#cep").val().length === 9) buscaCep();
+  });
 });
-
-$('input[name="account-type"]').on("change", () => {
-  if ($("#shop").is(":checked")) {
-    $("#shopInfo").removeClass("d-none");
-    $('label[for="nome"]').text("Nome Fantasia");
-  } else $("#shopInfo").addClass("d-none");
-});
-
-$("#cep").on("input", () => {
-  if ($("#cep").val().length === 9) buscaCep();
-});
-
-$("#searchcep").on("click", buscaCep);
 
 async function buscaCep() {
   $("#cep").removeAttr("style");
-  if (!$("#cep").val() || $("#cep").val().length < 9) {
+  if ($("#cep").val().length < 9) {
     showAlert("warning", "Digite um CEP válido!");
     return;
   }
-  let cep = removeMask($("#cep").val());
+  const cep = removeMask($("#cep").val());
 
   try {
-    let response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-    let data = await response.json();
+    const address = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
+    .then((res) => res.json());
 
-    if (data.erro === "true" || !response.ok) {
+    if (address.erro === "true") {
       showAlert("error", "CEP inválido!");
       $("#cep").css({
         "border-width": "2px",
@@ -49,105 +52,84 @@ async function buscaCep() {
       });
       return;
     }
-    $("#endereco").val(data.logradouro);
-    $("#bairro").val(data.bairro);
-    $("#cidade").val(data.localidade);
+    $("#endereco").val(address.logradouro);
+    $("#bairro").val(address.bairro);
+    $("#cidade").val(address.localidade);
     $("#cep").css({
       "border-width": "2px",
       "border-style": "solid",
       "border-color": "green",
     });
   } catch (e) {
-    console.error(data || response.statusText);
+    console.error(e.message);
   }
 }
 
-$("#register").on("click", () => {
-  if (
-    !$("#nome").val() ||
-    $("#telefone").val().length < 14 ||
-    !$("#email").val() ||
-    !$("#senha").val() ||
-    $("#cep").val().length < 9 ||
-    !$("#endereco").val() ||
-    !$("#bairro").val() ||
-    !$("#cidade").val() ||
-    !$("#endereco_num").val()
-  ) {
-    showAlert("error", "Preencha todas as informações!");
-    return;
-  }
-  let formData = new FormData();
-  formData.append("NOME", $("#nome").val());
-  formData.append("TELEFONE", removeMask($("#telefone").val()));
-  formData.append("EMAIL", $("#email").val());
-  formData.append("SENHA", $("#senha").val());
-  formData.append("CEP", removeMask($("#cep").val()));
-  formData.append("ENDERECO", $("#endereco").val());
-  formData.append("ENDERECO_NUM", $("#endereco_num").val());
-  formData.append("BAIRRO", $("#bairro").val());
-  formData.append("CIDADE", $("#cidade").val());
-  formData.append("COMPLEMENTO", $("#complemento").val());
+$("#clientForm").on("submit", function(e) {
+  e.preventDefault();
+  
+  const form = this;
+  const formData = new FormData(form);
+  
+  let filled = true;
+  for (const field of form.elements) {
+    // Ignora botão ou elementos sem name
+    if (field.tagName === "BUTTON" || !field.name) continue;
 
-  verifyCode($("#email").val(), formData);
+    if (!field.value.trim()) {
+      field.style.borderColor = "red";
+      filled = false;
+      console.warn(`Campo "${field.name}" está vazio.`);
+    }
+    if(field.name === "CPF" && !validator.validarCPF(field.value.trim())){
+      validator.createErrorMsg(field, "cpf");
+    } else if (field.name === "CNPJ" && !validator.validarCNPJ(field.value.trim())){
+      validator.createErrorMsg(field, "cnpj");
+    } else if (field.name === "EMAIL" && !validator.validarEmail(field.value.trim())){
+      validator.createErrorMsg(field, "email")
+    } else if (field.name === "TELEFONE" && !validator.validarTelefone(field.value.trim())){
+      validator.createErrorMsg(field, "telefone");
+    } else {
+      validator.clearError(field);
+    }
+  }
+
+  if (filled) {
+    console.log("Todos os campos foram preenchidos!");
+    verifyCode(formData.get("EMAIL"), formData);
+  }
 });
 
 async function registerShop(formData) {
-  if (
-    $("#cnpj").val().length < 18 ||
-    !$("#razao-social").val() ||
-    !$("#especialidade").val()
-  ) {
-    showAlert("warning", "Por favor preencha todos os campos!");
-    return;
-  }
+  const response = await fetch(
+    `./database/api/shop/registerShop.php`, fetchConfig("POST", formData)
+  )
+  .then((res) => res.json());
 
-  formData.append("CNPJ", removeMask($("#cnpj").val()));
-  formData.append("ESPECIALIDADE", $("#especialidade").val());
-  formData.append("RAZAO_SOCIAL", $("#razao-social").val());
-
-  let response = await fetch(`./database/api/shop/registerShop.php`, fetchConfig);
-
-  if (!response.ok) {
-    console.error(response.statusText);
-  }
-  showAlert(
-    response.ok ? "success" : "error",
-    response.ok ? "Loja cadastrada!" : "Erro ao cadastrar loja!",
-    !response.ok
-      ? "Tente novamente mais tarde ou entre em contato com o suporte para mais detalhes"
-      : "",
-    !response.ok ? 2000 : 1500
-  );
+  handleResponse(response);
 }
 async function registerClient(formData) {
-  let response = await fetch(`./database/api/client/registerClient.php`, fetchConfig);
+  const response = await fetch(
+    `./database/api/client/registerClient.php`, fetchConfig("POST", formData)
+  )
+  .then((res) => res.json());
 
-  if (!response.ok) {
-    console.error(response.statusText);
-  }
-
-  showAlert(
-    response.ok ? "success" : "error",
-    response.ok ? "Cadastro realizado!" : "Erro ao se cadastrar!",
-    !response.ok
-      ? "Tente novamente mais tarde ou entre em contato com o suporte para mais detalhes"
-      : ""
-  );
+  handleResponse(response);
 }
 
 async function verifyCode(email, body) {
   const code = Math.floor(100000 + Math.random() * 900000);
 
-  let formData = new FormData();
+  const formData = new FormData();
   formData.append("CODE", code);
   formData.append("EMAIL", email);
 
-  let response = await fetch(`./database/api/verifyCode.php`, fetchConfig);
-  let data = await response.json();
+  const response = await fetch(
+    `./database/api/verifyCode.php`, fetchConfig("POST", formData)
+  ).then((res) => res.json());
 
-  if (!data.status) {
-    showAlert(
+  if (!response.success) {
+    return showAlert(
       "error",
       "Erro ao confirmar a conta!",
       "Entre em contato com o suporte!",
@@ -163,7 +145,7 @@ async function verifyCode(email, body) {
     inputValidator: value => {
       if (!value) return "Digite o código!";
       if (value && Number(value) !== code) return "Código incorreto!";
-    },
+    }
   });
   if (verification) {
     if ($("#shopInfo").hasClass("d-none")) registerClient(body);

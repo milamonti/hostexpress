@@ -215,7 +215,7 @@ class Shop
       $stmt2->execute();
 
       if ($stmt->execute()) {
-        Response::success([], 'Loja registrada com sucesso');
+        Response::success([], 'Loja registrada com sucesso!');
       } else {
         Response::error('Erro ao registrar loja');
       }

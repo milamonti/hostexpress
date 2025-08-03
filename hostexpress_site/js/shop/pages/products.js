@@ -4,14 +4,9 @@ import { fetchConfig, mostrarLoading, ocultarLoading, showAlert } from "../../ut
 $(document).ready(loadDatatable);
 
 async function loadProducts() {
-  try {
-    const res = await fetch(`./database/api/shop/getShopProducts.php`);
-    const result = await res.json();
-    return result.data || [];
-  } catch (error) {
-    console.error(error.message);
-    return [];
-  }
+  return await fetch(`./database/api/shop/getShopProducts.php`)
+  .then((res) => res.json())
+  .then((result) =>  result.data || []);
 }
 
 window.addProduct = async () => {
@@ -65,12 +60,10 @@ async function uploadPhoto(id) {
 }
 
 async function loadDatatable() {
-  ocultarLoading('#products');
   if($.fn.dataTable.isDataTable("#products")){
     $("#products").DataTable().clear().destroy();
   }
   const products = await loadProducts() || [];
-  mostrarLoading('#products');
   const datatable = $("#products").DataTable({
     data: products,
     columns: [
