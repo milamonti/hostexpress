@@ -1,8 +1,8 @@
 <?php 
 
 require_once '../../config/config.php';
-include_once ROOT . '/database/modules/responseManager.php';
-include_once ROOT . '/database/modules/shopManager.php';
+include_once MODULES . '/responseManager.php';
+include_once MODULES . '/shopManager.php';
 
 if(!$_POST['ID']) {
   Response::badRequest('ID do produto não fornecido');

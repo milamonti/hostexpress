@@ -1,8 +1,8 @@
 <?php
 
 require_once '../config/config.php';
-include_once ROOT . '/database/modules/responseManager.php';
-include_once ROOT . '/database/modules/authManager.php';
+include_once MODULES . '/responseManager.php';
+include_once MODULES . '/authManager.php';
 
 if(!$_POST['EMAIL'] || !$_POST['SENHA']){
   Response::badRequest();

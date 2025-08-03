@@ -1,6 +1,7 @@
 <?php
 // Caminho absoluto da raiz do projeto
 define('ROOT', dirname(__DIR__, 2));
+define('MODULES', ROOT . '/database/modules');
 
 require_once ROOT . '/vendor/autoload.php';
 

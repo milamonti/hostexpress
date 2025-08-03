@@ -1,8 +1,8 @@
 <?php 
 
 require_once '../../config/config.php';
-require_once ROOT . '/database/modules/responseManager.php';
-require_once ROOT . '/database/modules/clientManager.php';
+require_once MODULES . '/responseManager.php';
+require_once MODULES . '/clientManager.php';
 
 try {
   if (!isset($_POST)){

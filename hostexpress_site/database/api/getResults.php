@@ -1,7 +1,7 @@
 <?php 
 
 require_once '../config/config.php';
-require_once ROOT . '/database/modules/responseManager';
+require_once MODULES . '/responseManager.php';
 include_once ROOT . '/conexao.php';
 $Conexao = Conexao::conectar();
 

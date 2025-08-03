@@ -1,9 +1,9 @@
 <?php 
 
 require_once '../../config/config.php';
-require_once ROOT . '/database/modules/responseManager.php';
-require_once ROOT . '/database/modules/shopManager.php';
-require_once ROOT . '/database/modules/authManager.php';
+require_once MODULES . '/responseManager.php';
+require_once MODULES . '/shopManager.php';
+require_once MODULES . '/authManager.php';
 $auth = new Auth();
 
 if(!$auth->isLoggedIn()) {

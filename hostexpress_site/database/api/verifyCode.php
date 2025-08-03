@@ -5,7 +5,7 @@ if(session_status() == PHP_SESSION_NONE){
 }
 
 require_once '../config/config.php';
-require_once ROOT . '/database/modules/responseManager.php';
+require_once MODULES . '/responseManager.php';
 require ROOT . '/libs/PHPMailer/PHPMailer.php';
 require ROOT . '/libs/PHPMailer/SMTP.php';
 require ROOT . '/libs/PHPMailer/Exception.php';
