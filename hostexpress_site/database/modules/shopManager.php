@@ -1,11 +1,11 @@
 <?php 
 
 require_once dirname(__DIR__, 1) . '/config/config.php';
+require_once dirname(__DIR__, 1) . '/middleware/authMiddleware.php';
 require_once __DIR__ . '/responseManager.php';
-require_once __DIR__ . '/authManager.php';
-include_once ROOT . '/conexao.php';
+include_once root . '/conexao.php';
 $Conexao = Conexao::conectar();
-$auth = new Auth();
+$authData = authMiddleware();
 
 class Shop
 {
@@ -15,8 +15,8 @@ class Shop
   public static function getAllProducts(): void
   {
     try {
-      global $Conexao, $auth;
-      $email = $auth->user('email');
+      global $Conexao, $authData;
+      $email = $authData['sub'];
         
       $query = "
         SELECT * FROM he_produtos A
@@ -42,27 +42,25 @@ class Shop
   public static function getProductById(int $id): void
   {
     try {
-        global $Conexao;
+      global $Conexao;
 
-        if (empty($id)) {
-          Response::badRequest('ID do produto não informado');
-        }
+      if (empty($id)) {
+        Response::badRequest('ID do produto não informado');
+      }
 
-        $query = "SELECT * FROM he_produtos WHERE PRODUTO_ID = :id";
-        $stmt = $Conexao->prepare($query);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
+      $query = "SELECT * FROM he_produtos WHERE PRODUTO_ID = :id";
+      $stmt = $Conexao->prepare($query);
+      $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+      $stmt->execute();
 
-        if ($stmt->rowCount() > 0) {
-          $product = $stmt->fetch(PDO::FETCH_ASSOC);
-          Response::success($product, 'Produto encontrado');
-        } else {
-          Response::notFound([], 'Produto não encontrado');
-        }
-    } catch (PDOException $e) {
-      Response::internalError($e->getMessage());
-    } catch (Exception $e) {
-      Response::sendJson($e->getCode(), $e->getMessage());
+      if ($stmt->rowCount() > 0) {
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+        Response::success($product, 'Produto encontrado');
+      } else {
+        Response::notFound('Produto não encontrado');
+      }
+    } catch (\Exception $e) {
+      Response::handleException($e);
     }
   }
 
@@ -107,8 +105,6 @@ class Shop
       if ($stmt->execute()) {
         $productId = $Conexao->lastInsertId();
         Response::success(['productId' => $productId], 'Produto adicionado com sucesso');
-      } else {
-        Response::error('Erro ao adicionar produto');
       }
     } catch (PDOException $e) {
       Response::internalError($e->getMessage());
@@ -119,60 +115,56 @@ class Shop
 
   public static function updateProduct(array $data): void
   {
-      try {
-          global $Conexao;
-  
-          if (empty($data)) {
-            Response::badRequest('ID do produto ou dados incompletos');
-          }
-  
-          $query = "
-            UPDATE he_produtos 
-            SET DESCRICAO = :description, CATEGORIA = :category, UNIDADE = :unit, PRECO_UN = :price 
-            WHERE PRODUTO_ID = :id
-          ";
-          $stmt = $Conexao->prepare($query);
-          $stmt->bindParam(':description', $data['DESCR'], PDO::PARAM_STR);
-          $stmt->bindParam(':category', $data['CATEGORY'], PDO::PARAM_STR);
-          $stmt->bindParam(':unit', $data['UNITY'], PDO::PARAM_STR);
-          $stmt->bindParam(':price', $data['PRICE'], PDO::PARAM_STR);
-          $stmt->bindParam(':id', $data['ID'], PDO::PARAM_INT);
-  
-          if ($stmt->execute()) {
-              Response::success([], 'Produto atualizado com sucesso');
-          } else {
-              Response::error('Erro ao atualizar produto');
-          }
-      } catch (PDOException $e) {
-          Response::internalError($e->getMessage());
-      } catch (Exception $e) {
-          Response::sendJson($e->getCode(), $e->getMessage());
+    try {
+      global $Conexao;
+
+      if (empty($data)) {
+        Response::badRequest('ID do produto ou dados incompletos');
       }
+  
+      $query = "
+        UPDATE he_produtos 
+        SET DESCRICAO = :description, CATEGORIA = :category, UNIDADE = :unit, PRECO_UN = :price 
+        WHERE PRODUTO_ID = :id
+      ";
+      $stmt = $Conexao->prepare($query);
+      $stmt->bindParam(':description', $data['DESCR'], PDO::PARAM_STR);
+      $stmt->bindParam(':category', $data['CATEGORY'], PDO::PARAM_STR);
+      $stmt->bindParam(':unit', $data['UNITY'], PDO::PARAM_STR);
+      $stmt->bindParam(':price', $data['PRICE'], PDO::PARAM_STR);
+      $stmt->bindParam(':id', $data['ID'], PDO::PARAM_INT);
+  
+      if ($stmt->execute()) {
+        Response::success([], 'Produto atualizado com sucesso');
+      }
+    } catch (PDOException $e) {
+      Response::internalError($e->getMessage());
+    } catch (Exception $e) {
+      Response::sendJson($e->getCode(), $e->getMessage());
+    }
   }
 
   public static function deleteProduct(int $id): void
   {
-      try {
-          global $Conexao;
-  
-          if (empty($id)) {
-              Response::badRequest('ID do produto não informado');
-          }
-  
-          $query = "DELETE FROM he_produtos WHERE PRODUTO_ID = :id";
-          $stmt = $Conexao->prepare($query);
-          $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-  
-          if ($stmt->execute()) {
-              Response::success([], 'Produto deletado com sucesso');
-          } else {
-              Response::error('Erro ao deletar produto');
-          }
-      } catch (PDOException $e) {
-          Response::internalError($e->getMessage());
-      } catch (Exception $e) {
-          Response::sendJson($e->getCode(), $e->getMessage());
+    try {
+      global $Conexao;
+
+      if (empty($id)) {
+        Response::badRequest('ID do produto não informado');
       }
+  
+      $query = "DELETE FROM he_produtos WHERE PRODUTO_ID = :id";
+      $stmt = $Conexao->prepare($query);
+      $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+  
+      if ($stmt->execute()) {
+        Response::success([], 'Produto deletado com sucesso');
+      }
+    } catch (PDOException $e) {
+      Response::internalError($e->getMessage());
+    } catch (Exception $e) {
+      Response::sendJson($e->getCode(), $e->getMessage());
+    }
   }
 
   public static function registerShop(array $data): void
@@ -190,7 +182,7 @@ class Shop
       $sql1 = "INSERT INTO he_empresas
         (CNPJ, ATIVO, RAZAO_SOCIAL, NOME_FANTASIA, TELEFONE, ENDERECO, ENDERECO_NUM, CIDADE, BAIRRO, CEP, COMPLEMENTO, EMAIL, ESPECIALIDADE)
         VALUES (:CNPJ, 'S', :RAZAO_SOCIAL, :NOME, :TELEFONE, :ENDERECO, :ENDERECO_NUM, :CIDADE, :BAIRRO, :CEP, :COMPLEMENTO, :EMAIL, :ESPECIALIDADE)";
-      $stmt1 = $conexao->prepare($sql1);
+      $stmt1 = $Conexao->prepare($sql1);
       $stmt1->bindParam(':CNPJ', $data['CNPJ'], PDO::PARAM_STR);
       $stmt1->bindParam(':RAZAO_SOCIAL', $data['RAZAO_SOCIAL'], PDO::PARAM_STR);
       $stmt1->bindParam(':NOME', $data['NOME'], PDO::PARAM_STR);
@@ -205,19 +197,19 @@ class Shop
       $stmt1->bindParam(':ESPECIALIDADE', $data['ESPECIALIDADE'], PDO::PARAM_STR);
       $stmt1->execute();
 
+      $SENHA_HASH = password_hash($data['SENHA'], PASSWORD_DEFAULT);
+
       // Insere na tabela he_users
       $sql2 = "INSERT INTO he_users(USER, PASSWORD, TYPE, NAME)
           VALUES(:EMAIL, :SENHA, 'SHOP', :RAZAO_SOCIAL)";
-      $stmt2 = $conexao->prepare($sql2);
-      $stmt2->bindParam(':EMAIL', $EMAIL, PDO::PARAM_STR);
+      $stmt2 = $Conexao->prepare($sql2);
+      $stmt2->bindParam(':EMAIL', $data['EMAIL'], PDO::PARAM_STR);
       $stmt2->bindParam(':SENHA', $SENHA_HASH, PDO::PARAM_STR);
-      $stmt2->bindParam(':RAZAO_SOCIAL', $RAZAO_SOCIAL, PDO::PARAM_STR);
+      $stmt2->bindParam(':RAZAO_SOCIAL', $data['RAZAO_SOCIAL'], PDO::PARAM_STR);
       $stmt2->execute();
 
-      if ($stmt->execute()) {
+      if ($stmt2->execute()) {
         Response::success([], 'Loja registrada com sucesso!');
-      } else {
-        Response::error('Erro ao registrar loja');
       }
     } catch (PDOException $e) {
       Response::internalError($e->getMessage());
@@ -283,9 +275,7 @@ class Shop
   
       if ($stmt->execute()) {
         Response::success([], 'Informações da loja atualizadas com sucesso');
-      } else {
-        Response::error('Erro ao atualizar informações da loja');
-      }
+      } 
     } catch (PDOException $e) {
       Response::internalError($e->getMessage());
     } catch (Exception $e) {

@@ -1,9 +1,13 @@
 <?php
 
-require_once '../config/config.php';
-include_once MODULES . '/responseManager.php';
-include_once ROOT . '/conexao.php';
+require_once dirname(__DIR__, 1) . '/config/config.php';
+include_once modules . '/responseManager.php';
+include_once root . '/conexao.php';
 $conexao = Conexao::conectar();
+
+if($_SERVER['REQUEST_METHOD'] !== "GET"){
+  Response::methodNotAllowed();
+}
 
 try{
   $QUERY = <<<SQL
@@ -15,8 +19,6 @@ try{
   $products = $stm->fetchAll(PDO::FETCH_ASSOC);
   Response::success($products);
 }
-catch(PDOException $e){
-  Response::internalError($e->getMessage());
-} catch(Exception $e) {
-  Response::sendJson($e->getCode(), $e->getMessage());
+catch(\Exception $e){
+  Response::handleException($e);
 }

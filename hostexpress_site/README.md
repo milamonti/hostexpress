@@ -11,7 +11,7 @@ Este projeto implementa um sistema full stack utilizando:
 * **PHP** no back-end
 * **JavaScript** no front-end
 * **JWT** para autenticação via token
-* **Banco de dados MySQL** (script incluído: `hostexpress.sql`)
+* **Banco de dados MySQL** (script incluído: `/database/schemas/estructure.sql`)
 
 ---
 
@@ -73,7 +73,7 @@ Este projeto implementa um sistema full stack utilizando:
 │           ├── editProduct.php
 │           └── getShopProducts.php
 ├── modules/
-│   └── AuthManager.php         # Classe de autenticação via JWT
+│   └── userManager.php         # Classe de autenticação via JWT
 ├── config/
 │   └── config.php              # Caminhos e constantes
 ├── conexao.php                 # Conexão com o BD
@@ -105,7 +105,7 @@ Este projeto implementa um sistema full stack utilizando:
 
 ## 🛡️ Segurança
 
-* Utiliza JWT (token salvo via `Authorization: Bearer <token>` no header)
+* Utiliza JWT (token salvo via cookie da sessão)
 * Cookies com `httponly`, `secure`, `samesite=Strict`
 * Validação de token em todos os endpoints protegidos
 

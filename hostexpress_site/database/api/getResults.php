@@ -1,8 +1,8 @@
 <?php 
 
-require_once '../config/config.php';
-require_once MODULES . '/responseManager.php';
-include_once ROOT . '/conexao.php';
+require_once dirname(__DIR__, 1 ) . '/config/config.php';
+require_once modules . '/responseManager.php';
+include_once root . '/conexao.php';
 $Conexao = Conexao::conectar();
 
 try {

@@ -1,4 +1,4 @@
-import { fetchConfig, mostrarLoading, ocultarLoading, showAlert } from "../../utils.js";
+import { fetchConfig, handleResponse, showAlert } from "../../utils.js";
 
 // Carrega o datatable
 $(document).ready(loadDatatable);
@@ -29,7 +29,8 @@ window.addProduct = async () => {
   .then((response) => response.json())
   .then((result) => {
     if(!result.success) {
-      return showAlert("error", "Erro ao cadastrar o produto!", result.message);
+      showAlert("error", "Erro ao cadastrar o produto!", result.message);
+      return;
     }
     uploadPhoto(result.data.productId);
   })
@@ -43,23 +44,19 @@ async function uploadPhoto(id) {
   formData.append("photo", photo);
   formData.append("id", id);
 
-  await fetch("./database/api/upload.php" , fetchConfig("POST", formData))
-  .then((response) => response.json())
-  .then((result) => {
-    showAlert(
-      result.success ? "success" : "error",
-      result.success 
-        ? "Produto cadastrado!"
-        : "Erro ao cadastrar a foto do produto!",
-        result.success ? '' : result.message,
-        2000
-    );
-    $("#modalAddProduct").modal('hide');
-    loadDatatable();
-  });
+  const response = await fetch(
+    "./database/api/upload.php" , fetchConfig("POST", formData))
+  .then((res) => res.json())
+
+  handleResponse(response);
+
+  $("#modalAddProduct").modal('hide');
+  loadDatatable();
+
 }
 
 async function loadDatatable() {
+  $.fn.dataTable.ext.errMode = 'none';
   if($.fn.dataTable.isDataTable("#products")){
     $("#products").DataTable().clear().destroy();
   }
@@ -133,20 +130,15 @@ window.editProduct = async () => {
   formData.append("PRICE", $("#editPrice").val());
   formData.append("QTD", $("#editQtd").val());
 
-  await fetch("./database/api/shop/editProduct.php", fetchConfig("POST", formData))
+  const response = await fetch(
+    "./database/api/shop/editProduct.php", fetchConfig("POST", formData))
   .then((res) => res.json())
-  .then((result) => {
-    showAlert(
-      result.success ? "success" : "error", 
-      result.success ? "Cadastro alterado!" : "Erro ao alterar cadastro do produto!",
-      result.success ? '' : result.message,
-      2000
-    );
-    if(result.success) {
-      $("#modalEditProduct").modal("hide");
-      loadDatatable();
-    }
-  }).catch((e) => console.error(e.message));
+  
+  handleResponse(response);
+  if(result.success) {
+    $("#modalEditProduct").modal("hide");
+    loadDatatable();
+  }
 };
 
 window.handleDeleteProduct = id => {
@@ -165,15 +157,14 @@ window.deleteProduct = async id => {
   const formData = new FormData();
   formData.append("ID", id);
 
-  await fetch("./database/api/shop/deleteProduct.php", fetchConfig("POST", formData))
-  .then((res) => res.json())
-  .then((result) => {
-    showAlert(
-      result.success ? "success" : "error", 
-      result.success ? "Produto excluído!" : "Erro ao excluir produto!",
-      result.success ? '' : result.message,
-      2000
-    );
-    if(result.success) loadDatatable();
-  });
+  const response = await fetch(
+    "./database/api/shop/deleteProduct.php", {
+    method: "DELETE",
+    body: JSON.stringify({ id: id })
+  })
+  .then((res) => res.json());
+  
+  handleResponse(response);
+  if(response.success) loadDatatable();
 };
+ 

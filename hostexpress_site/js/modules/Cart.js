@@ -88,4 +88,8 @@ export default class Cart {
     localStorage.setItem("carrinho", JSON.stringify(carrinho));
     this.updateCartBadge();
   }
+
+  static getCartItems() {
+    return JSON.parse(localStorage.getItem("carrinho")) || [];
+  }
 }

@@ -2,6 +2,7 @@
 
 class Response
 {
+  // Constantes já definidas de códigos de retorno HTTP
   const HTTP_OK = 200;
   const HTTP_CREATED = 201;
   const HTTP_ACCEPTED = 202;
@@ -14,7 +15,17 @@ class Response
   const HTTP_UNPROCESSABLE_ENTITY = 422;
   const HTTP_INTERNAL_SERVER_ERROR = 500;
 
-  private static function sendJson(int $status, string $message, array $data = []): void
+  /**
+   * Função que principal da classe que retorna um JSON para o JavaScript,
+   * com as informações sobre a requisição
+   * @param status Código HTTP da requisição
+   * @param message Mensagem enviada para a requisição
+   * @param data Informações buscadas na requisição.
+   * 
+   * Todas as outras funções posteriormente usam esta para enviar
+   * retorno já pré-definido para o Front-end
+   */
+  public static function sendJson(int $status, string $message, array $data = []): void
   {
     http_response_code($status);
     header('Content-Type: application/json; charset=utf-8');
@@ -45,7 +56,7 @@ class Response
     self::sendJson(self::HTTP_ACCEPTED, $message, $data);
   }
 
-  public static function badRequest(string $message = 'Requisição inválida'): void
+  public static function badRequest(string $message = 'Requisição inválida ou malformada'): void
   {
     self::sendJson(self::HTTP_BAD_REQUEST, $message);
   }
@@ -65,7 +76,7 @@ class Response
     self::sendJson(self::HTTP_NOT_FOUND, $message);
   }
 
-  public static function methodNotAllowed(string $message = 'Método não permitido'): void
+  public static function methodNotAllowed(string $message = 'Método de requisição não permitido'): void
   {
     self::sendJson(self::HTTP_METHOD_NOT_ALLOWED, $message);
   }
@@ -84,7 +95,7 @@ class Response
    * Executa a saída correta quando ocorre uma exceção no código
    * @param Exception Recebe uma exceção qualquer em alguma requisição
    */
-  public static function handleException(Exception $e)
+  public static function handleException(\Exception $e) :void
   {
     if($e instanceof PDOException){
       self::internalError($e->getMessage());

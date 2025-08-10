@@ -1,7 +1,7 @@
 <?php 
 require_once dirname(__DIR__, 3) . '/database/config/config.php';
-include_once ROOT . '/database/modules/authManager.php';
-$auth = new Auth();
+include_once modules . '/userManager.php';
+$user = new User();
 ?>
 <nav class="navbar bg-primary shadow-lg w-100 justify-content-center p-0">
     <div class="d-flex justify-content-between flex-wrap align-items-center w-100 p-1">
@@ -13,7 +13,7 @@ $auth = new Auth();
         <div class="dropdown dropstart me-4" style="cursor: pointer;">
             <div class="dropdown-toggle text-white" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-person-circle fs-4 me-2"></i>
-                <?php echo htmlspecialchars($auth->user('name')) ?>
+                <?php echo htmlspecialchars($user->getTokenField("name")) ?>
             </div>
             <ul class="dropdown-menu me-2">
                 <li>

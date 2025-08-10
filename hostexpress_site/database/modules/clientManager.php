@@ -1,15 +1,15 @@
 <?php 
 
-require_once '../config/config.php';
+require_once dirname(__DIR__, 1) . '/config/config.php';
 require_once __DIR__ . '/responseManager.php';
-include_once ROOT . '/conexao.php';
+include_once root . '/conexao.php';
 $Conexao = Conexao::conectar();
 
 class Client 
 {
   /**
-   * Função para buscar todos os clientes
-   */
+   * Função para buscar todos os clientes cadastrados
+  */
   public static function getAllClients(): void
   {
     try {
@@ -32,104 +32,114 @@ class Client
     } 
   }
 
-    /**
-     * 
-     * Função que busca o cliente pelo e-mail já autenticado no login
-     * @param email $email
-     * @return void
-     * 
-     **/
-    public static function getClientByEmail(String $email): void
-    {
-        try {
-            global $Conexao;
-    
-            if (empty($email)) {
-                Response::badRequest('E-mail não informado');
-            }
-    
-            $query = "
-                SELECT A.* 
-                FROM he_clientes A
-                INNER JOIN he_users B ON A.EMAIL = B.USER
-                WHERE B.USER = :email
-            ";
-            $stmt = $Conexao->prepare($query);
-            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-            $stmt->execute();
-    
-            if ($stmt->rowCount() > 0) {
-                $client = $stmt->fetch(PDO::FETCH_ASSOC);
-                Response::success($client, 'Cliente encontrado');
-            } else {
-                Response::notFound([], 'Cliente não encontrado');
-            }
-        } catch (PDOException $e) {
-            Response::internalError($e->getMessage());
-        } catch (Exception $e) {
-            Response::sendJson($e->getCode(), $e->getMessage());
-        } 
-    }
+  /** 
+   * Função que busca o cliente pelo e-mail já autenticado no login
+   * @param email email do cliente 
+  */
+  public static function getClientByEmail(String $email): void
+  {
+    try {
+      global $Conexao;
 
-    public static function updateClient(String $id)
-    {
-        try {
-            global $Conexao;
-        
-            $query = "
-                UPDATE he_clientes
-                SET NOME = :NOME, EMAIL = :EMAIL,
-                    TELEFONE = :TELEFONE, CEP = :CEP,
-                    ENDERECO = :ENDERECO, ENDERECO_NUM = :ENDERECO_NUM,
-                    BAIRRO = :BAIRRO, CIDADE = :CIDADE
-                WHERE ID = :ID	
-            ";
-            $stm = $Conexao->prepare($query);
-            $stm->bindParam(':NOME', $NOME, PDO::PARAM_STR);
-            $stm->bindParam(':EMAIL', $EMAIL, PDO::PARAM_STR);
-            $stm->bindParam(':TELEFONE', $TELEFONE, PDO::PARAM_STR);
-            $stm->bindParam(':ENDERECO', $ENDERECO, PDO::PARAM_STR);
-            $stm->bindParam(':ENDERECO_NUM', $ENDERECO_NUM, PDO::PARAM_STR);
-            $stm->bindParam(':BAIRRO', $BAIRRO, PDO::PARAM_STR);
-            $stm->bindParam(':CIDADE', $CIDADE, PDO::PARAM_STR);
-            $stm->bindParam(':ID', $ID, PDO::PARAM_STR);
-            $stm->bindParam(':CEP', $CEP, PDO::PARAM_STR);
-            $stm->execute();
-            Response::success([], 'Cliente atualizado com sucesso');
-        } catch (PDOException $e) {
-            Response::internalError($e->getMessage());
-        } catch (Exception $e) {
-            Response::sendJson($e->getCode(), $e->getMessage());
-        }
-    }
+      if (empty($email)) {
+        Response::badRequest('E-mail não informado');
+      }
+  
+      $query = "
+        SELECT A.* 
+        FROM he_clientes A
+        INNER JOIN he_users B ON A.EMAIL = B.USER
+        WHERE B.USER = :email
+      ";
+      $stmt = $Conexao->prepare($query);
+      $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+      $stmt->execute();
+  
+      if ($stmt->rowCount() > 0) {
+        $client = $stmt->fetch(PDO::FETCH_ASSOC);
+        Response::success($client, 'Cliente encontrado');
+      } else {
+        Response::notFound('Cliente não encontrado');
+      }
+    } catch (PDOException $e) {
+      Response::internalError($e->getMessage());
+    } catch (Exception $e) {
+      Response::sendJson($e->getCode(), $e->getMessage());
+    } 
+  }
 
-    public static function deleteClient(String $id): void
-    {
-        try {
-            global $Conexao;
-    
-            if (empty($id)) {
-                Response::badRequest('ID do cliente não informado');
-                return;
-            }
-    
-            $query = "DELETE FROM he_clientes WHERE ID = :id";
-            $stmt = $Conexao->prepare($query);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
-    
-            if ($stmt->rowCount() > 0) {
-                Response::success([], 'Cliente deletado com sucesso');
-            } else {
-                Response::notFound([], 'Cliente não encontrado ou já deletado');
-            }
-        } catch (PDOException $e) {
-            Response::internalError($e->getMessage());
-        } catch (Exception $e) {
-            Response::sendJson($e->getCode(), $e->getMessage());
-        }
+  /**
+   * Função que atualiza as informações do cliente
+   * @param id ID do cliente
+   * @param data Array com as informações novas do cliente
+   */
+  public static function updateClient(string $id, array $data) :void
+  {
+    try {
+      global $Conexao;
+      
+      $query = "
+        UPDATE he_clientes
+        SET NOME = :NOME, EMAIL = :EMAIL,
+          TELEFONE = :TELEFONE, CEP = :CEP,
+          ENDERECO = :ENDERECO, ENDERECO_NUM = :ENDERECO_NUM,
+          BAIRRO = :BAIRRO, CIDADE = :CIDADE
+        WHERE ID = :ID	
+      ";
+      $stm = $Conexao->prepare($query);
+      $stm->bindParam(':NOME', $data['NOME'], PDO::PARAM_STR);
+      $stm->bindParam(':EMAIL', $data['EMAIL'], PDO::PARAM_STR);
+      $stm->bindParam(':TELEFONE', $data['TELEFONE'], PDO::PARAM_STR);
+      $stm->bindParam(':ENDERECO', $data['ENDERECO'], PDO::PARAM_STR);
+      $stm->bindParam(':ENDERECO_NUM', $data['ENDERECO_NUM'], PDO::PARAM_STR);
+      $stm->bindParam(':BAIRRO', $data['BAIRRO'], PDO::PARAM_STR);
+      $stm->bindParam(':CIDADE', $data['CIDADE'], PDO::PARAM_STR);
+      $stm->bindParam(':ID', $id, PDO::PARAM_STR);
+      $stm->bindParam(':CEP', $data['CEP'], PDO::PARAM_STR);
+      $stm->execute();
+      Response::success([], 'Cliente atualizado com sucesso');
+    } catch (PDOException $e) {
+      Response::internalError($e->getMessage());
+    } catch (Exception $e) {
+      Response::sendJson($e->getCode(), $e->getMessage());
     }
+  }
 
+  /**
+   * Função que exclui os dados de um cliente
+   * @param id ID do cliente
+   */
+  public static function deleteClient(String $id): void
+  {
+      try {
+          global $Conexao;
+  
+          if (empty($id)) {
+              Response::badRequest('ID do cliente não informado');
+              return;
+          }
+  
+          $query = "DELETE FROM he_clientes WHERE ID = :id";
+          $stmt = $Conexao->prepare($query);
+          $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+          $stmt->execute();
+  
+          if ($stmt->rowCount() > 0) {
+              Response::success([], 'Cliente deletado com sucesso');
+          } else {
+              Response::notFound('Cliente não encontrado ou já deletado');
+          }
+      } catch (PDOException $e) {
+          Response::internalError($e->getMessage());
+      } catch (Exception $e) {
+          Response::sendJson($e->getCode(), $e->getMessage());
+      }
+  }
+
+  /**
+   * Função que registra um cliente
+   * @param data Array com as informações do cliente
+   */
   public static function registerClient(array $data): void
   {
     try {
@@ -159,7 +169,7 @@ class Client
       $SENHA_HASH = password_hash($SENHA, PASSWORD_DEFAULT);
   
       // Verifica se o usuário já existe
-      $check = $conexao->prepare("SELECT 1 FROM he_users WHERE USER = :EMAIL");
+      $check = $Conexao->prepare("SELECT 1 FROM he_users WHERE USER = :EMAIL");
       $check->bindParam(':EMAIL', $EMAIL, PDO::PARAM_STR);
       $check->execute();
 
@@ -172,7 +182,7 @@ class Client
         INSERT INTO he_clientes (NOME, EMAIL, TELEFONE, ENDERECO, ENDERECO_NUM, DATA_CADASTRO, CIDADE, BAIRRO, CEP, COMPLEMENTO)
         VALUES (:NOME, :EMAIL, :TELEFONE, :ENDERECO, :ENDERECO_NUM, NOW(), :CIDADE, :BAIRRO, :CEP, :COMPLEMENTO)
       ";
-      $stm1 = $conexao->prepare($query1);
+      $stm1 = $Conexao->prepare($query1);
       $stm1->bindParam(':NOME', $NOME, PDO::PARAM_STR);
       $stm1->bindParam(':EMAIL', $EMAIL, PDO::PARAM_STR);
       $stm1->bindParam(':TELEFONE', $TELEFONE, PDO::PARAM_STR);
@@ -189,7 +199,7 @@ class Client
         INSERT INTO he_users (USER, PASSWORD, TYPE, NAME)
         VALUES (:EMAIL, :SENHA, 'CLIENT', :NOME)
       ";
-      $stm2 = $conexao->prepare($query2);
+      $stm2 = $Conexao->prepare($query2);
       $stm2->bindParam(':EMAIL', $EMAIL, PDO::PARAM_STR);
       $stm2->bindParam(':SENHA', $SENHA_HASH, PDO::PARAM_STR);
       $stm2->bindParam(':NOME', $NOME, PDO::PARAM_STR);

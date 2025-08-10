@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../config/config.php';
-require_once ROOT . '/conexao.php';
+require_once root . '/conexao.php';
 include_once __DIR__ . '/responseManager.php';
 $Conexao = Conexao::conectar();
 
@@ -20,43 +20,69 @@ class Auth
 
   // === Sessão ===
 
-  public  function set(string $key, mixed $value): void
+  /**
+   * Função usada para definir valores na sessão do usuário
+   * @param key Chave definida na sessão
+   * @param value Valor para a chave atribuída
+  */
+  public function set(string $key, mixed $value): void
   {
     $_SESSION[$key] = $value;
   }
 
-  public  function get(string $key, mixed $default = null): mixed
+  /**
+   * Função usada para buscar valores na sessão do usuário
+   * @param key Chave buscada na sessão
+   * @return value Valor da chave definida na sessão
+  */
+  public function get(string $key, mixed $default = null): mixed
   {
     return $_SESSION[$key] ?? $default;
   }
 
-  public  function has(string $key): bool
+  /**
+   * Função usada para verificar se um usuário possui uma chave definida na sessão
+   * @param key Valor buscado na sessão
+   * @return bool Retorna verdadeiro ou falso dependendo
+   * da presença da chave na sessão  
+  */
+  public function has(string $key): bool
   {
     return isset($_SESSION[$key]);
   }
 
-  public  function remove(string $key): void
+  /**
+   * Função usada para remover uma chave da sessão
+   * @param key Valor removido da sessão
+  */
+  public function remove(string $key): void
   {
     unset($_SESSION[$key]);
   }
 
-  public  function regenerate(): void
+  /**
+   * Função que regenera o id da sessãp
+   */
+  public function regenerate(): void
   {
     session_regenerate_id(true);
   }
 
-  public  function destroy(): void
+  /**
+   * Função que destrói a sessão
+   */
+  public function destroy(): void
   {
     $_SESSION = [];
     session_destroy();
   }
 
-  private  function updateLastActivity(): void
+  private function updateLastActivity(): void
   {
     $_SESSION['_last_activity'] = time();
   }
 
-  private  function checkSessionTimeout(): void
+  private function checkSessionTimeout(): void
   {
     $last = $_SESSION['_last_activity'] ?? time();
     if (time() - $last > $this->timeout) {
@@ -68,7 +94,7 @@ class Auth
 
   // === Autenticação ===
 
-  public function authenticateUser(string $email, string $password) :bool|array
+  public function authenticateUser(string $email, string $password) :?array
   {
     global $Conexao;
 
@@ -88,7 +114,7 @@ class Auth
 
     if (!$response) {
       Response::notFound('Usuário não encontrado!');
-      return false;
+      return null;
     }
 
     if (password_verify($password, $response['PASSWORD'])) {
@@ -101,7 +127,7 @@ class Auth
     }
 
     Response::unauthorized('Usuário ou senha incorretos!');
-    return false;
+    return null;
   }
 
   public function login(string $email, string $password): void
@@ -120,7 +146,7 @@ class Auth
     }
   }
 
-  public  function logout(): void
+  public function logout(): void
   {
     $this->destroy();
     session_start();
@@ -131,7 +157,7 @@ class Auth
     return isset($_SESSION['auth']);
   }
 
-  public  function user(string $campo = null): mixed
+  public  function user(string $campo): mixed
   {
     if (!$this->isLoggedIn()) return null;
 

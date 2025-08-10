@@ -5,8 +5,6 @@ function getUserCoordinates() {
         posicao => {
           const latitude = posicao.coords.latitude;
           const longitude = posicao.coords.longitude;
-
-          $("#coordenadas").val(latitude + "/" + longitude);
           resolve({ latitude, longitude });
         },
         erro => {
@@ -28,7 +26,7 @@ async function getUserLocation() {
     const response = await fetch(
       `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
     )
-    .catch((e) => console.log(e));
+    .catch((e) => console.log('Erro getting user location', e.message));
     
     return await response.json();
   } catch (e) {
@@ -38,15 +36,15 @@ async function getUserLocation() {
 
 export default function handleUserLocation() {
   localStorage.getItem("address")
-  ? $("#cidade").text(localStorage.getItem("address"))
+  ? $("#location").text(localStorage.getItem("address"))
   : getUserLocation()
     .then((result) => {
-      $("#cidade").text(
+      $("#location").text(
         result.address.neighbourhood
           ? `${result.address.neighbourhood} - ${result.address.city}`
           : `${result.address.city}`
       );
-      localStorage.setItem("address", $("#cidade").text());
+      localStorage.setItem("address", $("#location").text());
     }).catch((e) => {
       console.error("Error getting user location:", e);
     });

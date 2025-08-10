@@ -1,28 +1,28 @@
 <?php
 
 require_once __DIR__ . '/../config/config.php';
-include_once ROOT . '/database/modules/responseManager.php';
-include_once ROOT . '/database/modules/shopManager.php';
+include_once root . '/database/modules/responseManager.php';
+include_once root . '/database/modules/shopManager.php';
 
 
 class Upload {
   private $uploadDir;
 
   public function __construct($uploadDir = 'uploads') {
-      $this->uploadDir = rtrim($uploadDir, '/');
-      if (!is_dir($this->uploadDir)) {
-          mkdir($this->uploadDir, 0755, true);
-      }
+    $this->uploadDir = rtrim($uploadDir, '/');
+    if (!is_dir($this->uploadDir)) {
+      mkdir($this->uploadDir, 0755, true);
+    }
   }
 
-  public function uploadPhoto($id) {
+  public static function uploadPhoto($id) {
     try {
       if (!isset($_FILES['photo']) && $_FILES['photo']['error'] !== 0) {
         Response::badRequest('Nenhum arquivo foi enviado.');
       } 
 
       $arquivo_tmp = $_FILES['photo']['tmp_name'];
-      $folder = ROOT . "/images/products/";
+      $folder = root . "/images/products/";
       //pega a extensão do arquivo
       $extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
 
@@ -41,7 +41,7 @@ class Upload {
         Shop::updateProductPhoto($newName, $id);
         Response::success([], 'Upload realizado com successo');
       } else {
-        Response::internalError('Erro ao enviar o arquivo: ' . $e->getMessage());
+        Response::internalError('Erro ao enviar o arquivo.');
       }
     } catch (PDOException $e) {
       Response::internalError($e->getMessage());

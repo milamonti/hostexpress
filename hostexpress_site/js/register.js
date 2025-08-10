@@ -9,29 +9,36 @@ $(document).ready(function() {
 
   //Event Listeners
   toggleInput("icone");
-  $("#searchcep").on("click", buscaCep);
+  $("#searchcep").on("click", getCep);
   
   $('input[name="account-type"]').on("change", () => {
+    $("#shopInfo").toggleClass("d-none");
     if ($("#shop").is(":checked")) {
-      $("#shopInfo").removeClass("d-none");
       $('label[for="nome"]').text("Nome Fantasia");
-      $("#cnpj").prop("disabled", false);
-      $("#razao-fantasia").prop("disabled", false);
-      $("#especialidade").prop("disabled", false);
-    } else {
-      $("#shopInfo").addClass("d-none");
-      $("#cnpj").prop("disabled", true);
-      $("#razao-fantasia").prop("disabled", true);
-      $("#especialidade").prop("disabled", true);
     }
   });
   
+  // Realiza automaticamente a busca pelo CEP quando o length for 9
   $("#cep").on("input", () => {
-    if ($("#cep").val().length === 9) buscaCep();
+    if ($("#cep").val().length === 9) getCep();
+  });
+
+  $("#clientForm").on("submit", function(e) {
+    e.preventDefault();
+    
+    const form = this;
+    if(validator.validateFields(form)) {
+      const formData = new FormData(form);
+      verifyCode(formData);
+    }
   });
 });
 
-async function buscaCep() {
+/**
+ * Função que faz uma requisição na API do viacep,
+ * buscando o endereço completo do CEP fornecido.
+ */
+async function getCep() {
   $("#cep").removeAttr("style");
   const cep = removeMask($("#cep").val());
   if (cep.length !== 8) {
@@ -60,21 +67,11 @@ async function buscaCep() {
       "border-style": "solid",
       "border-color": "green",
     });
+    console.log($("#cidade").val(), $("#endereco").val(), $("#bairro").val());
   } catch (e) {
     console.error(e.message);
   }
 }
-
-$("#clientForm").on("submit", function(e) {
-  e.preventDefault();
-  
-  const form = this;
-  const formData = new FormData(form);
-  
-  if(validator.validateFields(formData)) {
-    verifyCode(formData.get("EMAIL"), formData);
-  }
-});
 
 async function registerShop(formData) {
   const response = await fetch(
@@ -93,24 +90,31 @@ async function registerClient(formData) {
   handleResponse(response);
 }
 
-async function verifyCode(email, body) {
+/**
+ * 
+ * @param {FormData} body Corpo/Formulário do cadastro 
+ * @returns 
+ */
+async function verifyCode(body) {
   const code = Math.floor(100000 + Math.random() * 900000);
+  console.log(code);
 
   const formData = new FormData();
   formData.append("CODE", code);
-  formData.append("EMAIL", email);
+  formData.append("EMAIL", body.get("email"));
 
   const response = await fetch(
     `./database/api/verifyCode.php`, fetchConfig("POST", formData)
   ).then((res) => res.json());
 
   if (!response.success) {
-    return showAlert(
+    showAlert(
       "error",
       "Erro ao confirmar a conta!",
       "Entre em contato com o suporte!",
       2000
     );
+    return;
   }
 
   const { value: verification } = await Swal.fire({

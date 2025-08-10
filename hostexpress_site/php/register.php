@@ -86,4 +86,4 @@
 	</div>
 </div>
 
-<script type="module" src="./js/register.js?a=<?php echo microtime(); ?>"></script>
+<script type="module" src="./js/register.js?a=<?php echo microtime(true); ?>"></script>

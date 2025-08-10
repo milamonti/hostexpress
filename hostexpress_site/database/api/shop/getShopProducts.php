@@ -1,16 +1,13 @@
 <?php 
 
-require_once '../../config/config.php';
-require_once MODULES . '/responseManager.php';
-require_once MODULES . '/shopManager.php';
-require_once MODULES . '/authManager.php';
-$auth = new Auth();
-
-if(!$auth->isLoggedIn()) {
-  Response::unauthorized();
-}
+require_once dirname(__DIR__, 2) . '/middleware/authMiddleware.php';
+require_once dirname(__DIR__, 2) . '/config/config.php';
+require_once modules . '/responseManager.php';
+require_once modules . '/shopManager.php';
+require_once modules . '/authManager.php';
 
 try {
+  authMiddleware();
   Shop::getAllProducts();
 } catch (\PDOException $e) {
   Response::internalError($e->getMessage());

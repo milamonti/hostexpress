@@ -1,21 +1,16 @@
 <?php 
 
-require_once '../../config/config.php';
-require_once MODULES . '/responseManager.php';
-require_once MODULES . '/clientManager.php';
-include_once MODULES . '/authManager.php';
-$auth = new Auth();
+include_once dirname(__DIR__, 2) . '/config/config.php';
+include_once dirname(__DIR__, 2) . '/middleware/authMiddleware.php';
+require_once modules . '/responseManager.php';
+require_once modules . '/clientManager.php';
 
 try {
-  if (!$auth->isLoggedIn()) {
-    Response::unauthorized('Usuário não autenticado');
-  }
+  $authData = authMiddleware();
 
-  Client::getClientByEmail($auth->user('email'));
-} catch (PDOException $e) {
-  Response::internalError($e->getMessage());
-} catch (Exception $e) {
-  Response::sendJson($e->getCode(), 'Erro ao buscar detalhes do cliente: ' . $e->getMessage());
-}
+  Client::getClientByEmail($authData['sub']);
+} catch (\Exception $e) {
+  Response::handleException($e);
+} 
 
 ?>

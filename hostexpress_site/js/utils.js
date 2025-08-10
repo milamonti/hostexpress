@@ -1,3 +1,10 @@
+/**
+ * Função que adiciona uma máscara no input,
+ * para se adequar ao tipo de dado esperado.
+ * 
+ * @param {string} id ID do elemento HTML  
+ * @param {string} type Tipo de cleave a ser utilizada 
+ */
 export function addCleave(id, type){
   if(type === "phone"){
     new Cleave(`#${id}`, {
@@ -26,6 +33,11 @@ export function addCleave(id, type){
   }
 }
 
+/**
+ * 
+ * @param {string} str 
+ * @returns Retorna a string somente com números e/ou letras
+ */
 export const removeMask = str => str.replace(/\D/g, '');
 
 export function showAlert(type = 'info', title = 'Atenção', message = '', timer = 1500){
@@ -68,7 +80,8 @@ export const fetchConfig = (method, body = null) => {
 
 // export const fetchConfig = (method = 'GET', body = null) => {
 //   const headers = {
-//     'Authorization': `Bearer ${localStorage.getItem('token')}`
+//     'Content-Type': 'application/json',
+//     'credentials': 'include'
 //   };
 
 //   const config = { method, headers };
@@ -111,10 +124,9 @@ export const toggleInput = (id) => {
 }
 
 /**
- * Função que mostra um SweetAlert de acordo 
+ * Função que mostra um SweetAlert pré-definido de acordo 
  * com a requisição realizada anteriormente
- * 
- * @param response JSON de resposta da requisição
+ * @param {Response} response JSON de resposta da requisição
  */
 export const handleResponse = (response) => {
   showAlert(
@@ -126,7 +138,8 @@ export const handleResponse = (response) => {
 };
 
 /**
- * Define a função de logout globalmente
+ * Função de logout que executa um fetch
+ * em um arquivo PHP e reinicia a página
  */
 window.Logout = async () => {
   await fetch("./database/api/logout.php")
@@ -139,3 +152,13 @@ window.Logout = async () => {
     reloadPage();
   });
 }
+
+export const api = async (url, config = null) => {
+  if(config){
+    return await fetch(url, config)
+    .then((res) => res.json());
+  } else {
+    return await fetch(url)
+    .then((res) => res.json());
+  }
+};

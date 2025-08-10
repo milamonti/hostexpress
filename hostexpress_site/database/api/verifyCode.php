@@ -1,17 +1,25 @@
 <?php
 
-if(session_status() == PHP_SESSION_NONE){
-  session_start();
-}
+require_once dirname(__DIR__, 1) . '/config/config.php';
+require_once modules . '/responseManager.php';
+require_once root . '/libs/PHPMailer/PHPMailer.php';
+require_once root . '/libs/PHPMailer/SMTP.php';
+require_once root . '/libs/PHPMailer/Exception.php';
+require_once root . '/vendor/autoload.php';
 
-require_once '../config/config.php';
-require_once MODULES . '/responseManager.php';
-require ROOT . '/libs/PHPMailer/PHPMailer.php';
-require ROOT . '/libs/PHPMailer/SMTP.php';
-require ROOT . '/libs/PHPMailer/Exception.php';
+$dotenv = Dotenv\Dotenv::createImmutable(root);
+$dotenv->load();
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
+if($_SERVER['REQUEST_METHOD'] !== "POST"){
+  Response::methodNotAllowed();
+}
+
+if(!$_POST['CODE'] || !$_POST['EMAIL']){
+  Response::badRequest('E-mail ou código não enviados corretamente');
+}
 
 $code = $_POST['CODE'];
 $email = $_POST['EMAIL'];
@@ -22,7 +30,7 @@ try {
   $mail->Host = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
   $mail->Username = 'hostexpressjundiai@gmail.com';
-  $mail->Password = 'kwvs ukak jgel gjvi'; 
+  $mail->Password = $_ENV['emailPassword']; 
   $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
   $mail->Port = 587;
 
@@ -31,10 +39,12 @@ try {
 
   $mail->isHTML(true);
   $mail->Subject = 'Código de Verificação - HostExpress';
-  $mail->Body = "Olá! Seja bem-vindo ao HostExpress! Seu código de verificação é: <strong>$code</strong>";
+  $mail->Body = $html = str_replace('{{CÓDIGO}}', $code, file_get_contents(dirname(__DIR__, 2) . '/php/emailBody.html'));
   $mail->send();
 
   Response::success([], 'Código enviado!');
 } catch (\Exception $e) {
   Response::sendJson($e->getCode(), 'Erro ao enviar o código: ' . $e->getMessage());
 }
+
+?>

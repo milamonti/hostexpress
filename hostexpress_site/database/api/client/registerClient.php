@@ -1,8 +1,8 @@
 <?php 
 
-require_once '../../config/config.php';
-require_once MODULES . '/responseManager.php';
-require_once MODULES . '/clientManager.php';
+require_once dirname(__DIR__, 2) . '/config/config.php';
+require_once modules . '/responseManager.php';
+require_once modules . '/clientManager.php';
 
 try {
   if (!isset($_POST)){
@@ -14,10 +14,8 @@ try {
   }
 
   Client::registerClient($_POST);
-} catch (\PDOException $e) {
-  Response::internalError($e->getMessage());
 } catch (\Exception $e) {
-  Response::sendJson($e->getCode(), 'Erro ao registrar cliente: ' . $e->getMessage());
-}
+  Response::handleException($e);
+} 
 
 ?>

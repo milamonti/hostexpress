@@ -1,10 +1,14 @@
 <?php 
 
-require_once __DIR__ . '/../config/config.php';
-include_once MODULES . '/responseManager.php';
-include_once MODULES . '/authManager.php';
+include_once dirname(__DIR__, 1) . '/config/config.php';
+require_once modules . '/responseManager.php';
+require_once modules . '/userManager.php';
 
-$auth = new Auth();
-$auth->logout();
+try {
+  User::clearToken();
+  Response::success();
+} catch (\Exception $e) {
+  Response::handleException($e);
+}
 
 ?>

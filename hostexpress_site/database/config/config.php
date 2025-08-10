@@ -1,19 +1,20 @@
 <?php
 // Caminho absoluto da raiz do projeto
-define('ROOT', dirname(__DIR__, 2));
-define('MODULES', ROOT . '/database/modules');
+define('root', dirname(__DIR__, 2));
+// Caminho para os módulos do banco de dados 
+define('modules', root . '/database/modules');
 
-require_once ROOT . '/vendor/autoload.php';
+require_once root . '/vendor/autoload.php';
 
 // Carrega as informações do arquivo .env 
-$dotenv = Dotenv\Dotenv::createImmutable(ROOT);
+$dotenv = Dotenv\Dotenv::createImmutable(root);
 $dotenv->load();
 
 // Define as variáveis do banco
-$dbHost = getenv('host');
-$dbUser = getenv('user');
-$dbPass = getenv('password');
-$dbName = getenv('dbname');
+$dbHost = $_ENV('host');
+$dbUser = $_ENV('user');
+$dbPass = $_ENV('password');
+$dbName = $_ENV('dbname');
 
 // Timezone padrão
 date_default_timezone_set('America/Sao_Paulo');
@@ -30,7 +31,7 @@ define('DB_DRIVER', "mysql");
 define('CHARSET', XAMPP ? "utf8" : "utf8mb4");
 
 // URL base
-define('BASE_URL', 'https://hostexpress.ct.ws');
+define('BASE_URL', XAMPP ? 'http://localhost' : 'https://hostexpress.ct.ws');
 
 // Teste ou produção (true ou false)
 define('DEBUG', true);
@@ -45,7 +46,7 @@ if (DEBUG) {
   ini_set('display_errors', 0);
   ini_set('display_startup_errors', 0);
   ini_set('log_errors', 1);                // Logar erros em produção
-  ini_set('error_log', ROOT . '/database/logs/php_errors.log'); // Arquivo de log
+  ini_set('error_log', root . '/database/logs/php_errors.log'); // Arquivo de log
 }
 
 ?>

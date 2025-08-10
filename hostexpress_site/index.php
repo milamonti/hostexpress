@@ -1,85 +1,84 @@
 <?php
 
 require_once 'database/config/config.php';
-include_once 'database/modules/authManager.php';
-$auth = new Auth();
+require_once modules . '/userManager.php';
+$user = new User();
 
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HostExpress</title>
-    <link rel="shortcut icon" type="image/x-icon" href="./assets/caminhaobranco-removebg-preview.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HostExpress</title>
+  <link rel="shortcut icon" type="image/x-icon" href="./assets/caminhaobranco-removebg-preview.ico">
 
-	  <!--Helpers-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
+  <!--Helpers-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
 
-	  <!--Icons-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <!--Icons-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <style>
-      .search-container {
-        width: 600px;
-      }
+  <style>
+    .search-container {
+      width: 600px;
+    }
 
-      .carousel-item > .row {
-        display: flex;
-      }
+    .carousel-item > .row {
+      display: flex;
+    }
 
-      html, body {
-        height: 100%;
-        margin: 0;
-      }
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
 
-      body {
-        min-height: 100vh;
-      }
-      .card {
-        margin: 0 10px;
-        flex: 1;
-        min-width: 200px;
-      }
+    body {
+      min-height: 100vh;
+    }
+    .card {
+      margin: 0 10px;
+      flex: 1;
+      min-width: 200px;
+    }
 
-      .carousel-inner {
-        padding: 20px 0;
+    .carousel-inner {
+      padding: 20px 0;
+    }
+    #container {
+      flex: 1;
+    }
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.2);
+      pointer-events: all;
+      z-index: 2;
+      transition: 0.3s;
+      animation: pulseOverlay 3s infinite ease-in-out;
+    }
+    @keyframes pulseOverlay {
+      0%, 100% {
+        background-color: rgba(0, 0, 0, 0.2);
       }
-      #container {
-        flex: 1;
+      50% {
+        background-color: rgba(0, 0, 0, 0.4);
       }
-      .overlay {
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.2);
-        pointer-events: all;
-        z-index: 2;
-        transition: 0.3s;
-        animation: pulseOverlay 3s infinite ease-in-out;
-      }
-      @keyframes pulseOverlay {
-        0%, 100% {
-          background-color: rgba(0, 0, 0, 0.2);
-        }
-        50% {
-          background-color: rgba(0, 0, 0, 0.4);
-        }
-      }
-      .error-msg {
-        color: red;
-        font-weight: 300;
-        font-size: medium;
-      }
-  	</style>
-
+    }
+    .error-msg {
+      color: red;
+      font-weight: 300;
+      font-size: medium;
+    }
+  </style>
 </head>
 <body class="d-flex flex-column align-items-center w-100">
   
   <!--Navbar -->
   <?php 
-    if(($auth->isLoggedIn() && !$auth->hasRole('SHOP')) || !$auth->isLoggedIn()) {
+    if(!$user->getTokenFromCookie() || $user->getTokenField("role") !== "SHOP") {
       include_once 'php/navbar.php'; 
     } else {
       include_once 'php/shop/assets/shopNavbar.php';
@@ -90,7 +89,7 @@ $auth = new Auth();
 	<!--Container --> 
   <div id="container" class="container">
     <?php 
-      if(($auth->isLoggedIn() && !$auth->hasRole('SHOP')) || !$auth->isLoggedIn()) {
+      if(!$user->getTokenFromCookie() || $user->getTokenField("role") !== "SHOP") {
         include_once 'php/container.php';
       } else {
         include_once 'php/shop/assets/shopContainer.php';
@@ -140,7 +139,7 @@ $auth = new Auth();
   </script>
 
   <?php 
-    if(($auth->isLoggedIn() && !$auth->hasRole('SHOP')) || !$auth->isLoggedIn()) {
+    if(!$user->getTokenFromCookie() || $user->getTokenField(("role") !== "SHOP")) {
       echo '<script type="module" src="./js/main.js?a=<?php echo microtime(true); ?>"></script>';
     } else {
       echo '<script src="./js/shop/main.js?a=<?php echo microtime(true); ?>"></script>';

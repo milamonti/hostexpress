@@ -1,8 +1,9 @@
 <?php 
 
-require_once '../../config/config.php';
-require_once MODULES . '/responseManager.php';
-require_once MODULES . '/shopManager.php';
+require_once dirname(__DIR__, 2) . '/middleware/authMiddleware.php';
+require_once dirname(__DIR__, 2) . '/config/config.php';
+require_once modules . '/responseManager.php';
+require_once modules . '/shopManager.php';
 
 try {
   if($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -13,6 +14,7 @@ try {
     Response::badRequest('Dados não informados');
   }
 
+  authMiddleware();
   Shop::registerShop($_POST);
 } catch (\PDOException $e) {
   Response::internalError($e->getMessage());

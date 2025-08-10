@@ -1,8 +1,8 @@
 <?php
 
-require_once ROOT . '/vendor/autoload.php';
+require_once root . '/vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(ROOT);
+$dotenv = Dotenv\Dotenv::createImmutable(root);
 $dotenv->load();
 
 // Recebe os dados enviados pelo Mercado Pago
