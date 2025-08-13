@@ -5,10 +5,7 @@ require_once modules . '/responseManager.php';
 require_once root . '/libs/PHPMailer/PHPMailer.php';
 require_once root . '/libs/PHPMailer/SMTP.php';
 require_once root . '/libs/PHPMailer/Exception.php';
-require_once root . '/vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(root);
-$dotenv->load();
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;

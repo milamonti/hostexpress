@@ -28,10 +28,6 @@ class ComposerStaticInite875ae8441d070d7dda5f4b47a2117aa
             'Psr\\Http\\Client\\' => 16,
             'PhpOption\\' => 10,
         ),
-        'M' => 
-        array (
-            'MercadoPago\\' => 12,
-        ),
         'G' => 
         array (
             'GuzzleHttp\\Psr7\\' => 16,
@@ -74,10 +70,6 @@ class ComposerStaticInite875ae8441d070d7dda5f4b47a2117aa
         'PhpOption\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
-        ),
-        'MercadoPago\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/mercadopago/dx-php/src/MercadoPago',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (

@@ -111,29 +111,29 @@ class Client
    */
   public static function deleteClient(String $id): void
   {
-      try {
-          global $Conexao;
-  
-          if (empty($id)) {
-              Response::badRequest('ID do cliente não informado');
-              return;
-          }
-  
-          $query = "DELETE FROM he_clientes WHERE ID = :id";
-          $stmt = $Conexao->prepare($query);
-          $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-          $stmt->execute();
-  
-          if ($stmt->rowCount() > 0) {
-              Response::success([], 'Cliente deletado com sucesso');
-          } else {
-              Response::notFound('Cliente não encontrado ou já deletado');
-          }
-      } catch (PDOException $e) {
-          Response::internalError($e->getMessage());
-      } catch (Exception $e) {
-          Response::sendJson($e->getCode(), $e->getMessage());
+    try {
+      global $Conexao;
+
+      if (empty($id)) {
+        Response::badRequest('ID do cliente não informado');
+        return;
       }
+  
+      $query = "DELETE FROM he_clientes WHERE ID = :id";
+      $stmt = $Conexao->prepare($query);
+      $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+      $stmt->execute();
+  
+      if ($stmt->rowCount() > 0) {
+        Response::success([], 'Cliente deletado com sucesso');
+      } else {
+        Response::notFound('Cliente não encontrado ou já deletado');
+      }
+    } catch (PDOException $e) {
+      Response::internalError($e->getMessage());
+    } catch (Exception $e) {
+      Response::sendJson($e->getCode(), $e->getMessage());
+    }
   }
 
   /**

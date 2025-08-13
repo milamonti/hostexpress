@@ -18,11 +18,11 @@ class Shop
       global $Conexao, $authData;
       $email = $authData['sub'];
         
-      $query = "
+      $query = <<<SQL
         SELECT * FROM he_produtos A
         INNER JOIN he_empresas B ON A.EMPRESA_ID = B.EMPRESA_ID
         WHERE B.EMAIL = :email
-      ";
+      SQL;
       $stmt = $Conexao->prepare($query);
       $stmt->bindParam(':email', $email, PDO::PARAM_STR);
       $stmt->execute();
@@ -67,8 +67,8 @@ class Shop
   public static function addProduct(array $data): void
   {
     try {
-      global $Conexao, $auth;
-      $email = $auth->user('email');
+      global $Conexao, $authData;
+      $email = $authData['sub'];
 
       foreach($data as $key => $value) {
         if(empty($value)) {
@@ -90,10 +90,10 @@ class Shop
       }
       $empresaId = $empresa['EMPRESA_ID'];
 
-      $query = "
+      $query = <<<SQL
         INSERT INTO he_produtos (DESCRICAO, CATEGORIA, UNIDADE, QTD, PRECO_UN, EMPRESA_ID)
         VALUES (:descr, :category, :unit, :qtd, :price, :shopID)
-      ";
+      SQL;
       $stmt = $Conexao->prepare($query);
       $stmt->bindParam(':descr', $data['DESCR'], PDO::PARAM_STR);
       $stmt->bindParam(':qtd', $data['QTD'], PDO::PARAM_STR);
@@ -122,11 +122,11 @@ class Shop
         Response::badRequest('ID do produto ou dados incompletos');
       }
   
-      $query = "
+      $query = <<<SQL
         UPDATE he_produtos 
         SET DESCRICAO = :description, CATEGORIA = :category, UNIDADE = :unit, PRECO_UN = :price 
         WHERE PRODUTO_ID = :id
-      ";
+      SQL;
       $stmt = $Conexao->prepare($query);
       $stmt->bindParam(':description', $data['DESCR'], PDO::PARAM_STR);
       $stmt->bindParam(':category', $data['CATEGORY'], PDO::PARAM_STR);
@@ -149,7 +149,7 @@ class Shop
     try {
       global $Conexao;
 
-      if (empty($id)) {
+      if (!isset($id)) {
         Response::badRequest('ID do produto não informado');
       }
   
@@ -201,7 +201,7 @@ class Shop
 
       // Insere na tabela he_users
       $sql2 = "INSERT INTO he_users(USER, PASSWORD, TYPE, NAME)
-          VALUES(:EMAIL, :SENHA, 'SHOP', :RAZAO_SOCIAL)";
+        VALUES(:EMAIL, :SENHA, 'SHOP', :RAZAO_SOCIAL)";
       $stmt2 = $Conexao->prepare($sql2);
       $stmt2->bindParam(':EMAIL', $data['EMAIL'], PDO::PARAM_STR);
       $stmt2->bindParam(':SENHA', $SENHA_HASH, PDO::PARAM_STR);
@@ -221,14 +221,16 @@ class Shop
   public static function getShopInfo(): void
   {
     try {
-      global $Conexao, $auth;
-      $email = $auth->user('email');
+      global $Conexao, $authData;
+      $email = $authData['sub'];
 
       if (empty($email)) {
         Response::badRequest('Usuário ainda não autenticado');
       }
 
-      $query = "SELECT * FROM he_empresa WHERE EMAIL = :email";
+      $query = <<<SQL
+        SELECT * FROM he_empresa WHERE EMAIL = :email
+      SQL;
       $stmt = $Conexao->prepare($query);
       $stmt->bindParam(':email', $email, PDO::PARAM_STR);
       $stmt->execute();
@@ -249,8 +251,8 @@ class Shop
   public static function updateShopInfo(array $data): void
   {
     try {
-      global $Conexao, $auth;
-      $email = $auth->user('email');
+      global $Conexao, $authData;
+      $email = $authData['sub'];
 
       if (empty($email)) {
         Response::badRequest('Usuário ainda não autenticado');
@@ -305,3 +307,5 @@ class Shop
     }
   }
 }
+
+?>

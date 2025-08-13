@@ -120,7 +120,8 @@ window.editProduct = async () => {
     !$("#editPrice").val() ||
     !$("#editQtd").val()
   ) {
-    return showAlert("error", "Preencha todos os campos!");
+    showAlert("error", "Preencha todos os campos!");
+    return;
   }
   const formData = new FormData();
   formData.append("ID", $("#productId").val());

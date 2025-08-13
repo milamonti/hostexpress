@@ -16,13 +16,12 @@ window.Login = async (e) => {
   formData.append("EMAIL", $("#email").val());
   formData.append("SENHA", $("#senha").val());
 
-  await fetch("./database/api/login.php", fetchConfig("POST", formData))
-  .then((response) => response.json())
-  .then((result) => {
-    if(!result.success) {
-      showAlert("error", result.message);
-      return;
-    }
-    reloadPage();
-  });
+  const response = await fetch("./database/api/login.php", fetchConfig("POST", formData))
+  .then((res) => res.json())
+
+  if(!response.success) {
+    showAlert("error", response.message);
+    return;
+  }
+  reloadPage();
 }

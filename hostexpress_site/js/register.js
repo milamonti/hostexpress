@@ -67,7 +67,6 @@ async function getCep() {
       "border-style": "solid",
       "border-color": "green",
     });
-    console.log($("#cidade").val(), $("#endereco").val(), $("#bairro").val());
   } catch (e) {
     console.error(e.message);
   }
@@ -91,7 +90,8 @@ async function registerClient(formData) {
 }
 
 /**
- * 
+ * Função que envia um código via e-mail para o usuário
+ * e valida ele com um SweetAlert
  * @param {FormData} body Corpo/Formulário do cadastro 
  * @returns 
  */

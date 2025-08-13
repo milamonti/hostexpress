@@ -2,12 +2,9 @@
 
 require_once dirname(__DIR__, 1) . '/config/config.php';
 require_once root . '/conexao.php';
-require root . '/vendor/autoload.php';
 require_once __DIR__ . '/responseManager.php';
 
 $Conexao = Conexao::conectar();
-$dotenv = Dotenv\Dotenv::createImmutable(root);
-$dotenv->load();
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -92,18 +89,14 @@ class User
   {
     $jwt = $this->getTokenFromCookie();
 
-    if (!$jwt) {
-      return null;
-    }
+    if (!$jwt) return null;
 
     try {
       $decoded = JWT::decode($jwt, new Key($this->secretKey, 'HS256'));
 
       $value = $decoded->$field ?? null;
 
-      if ($value === null) {
-        return null;
-      }
+      if ($value === null) return null;
 
       return (string) $value;
     } catch (ExpiredException $e) {

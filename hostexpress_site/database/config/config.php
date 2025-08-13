@@ -11,10 +11,10 @@ $dotenv = Dotenv\Dotenv::createImmutable(root);
 $dotenv->load();
 
 // Define as variáveis do banco
-$dbHost = $_ENV('host');
-$dbUser = $_ENV('user');
-$dbPass = $_ENV('password');
-$dbName = $_ENV('dbname');
+$dbHost = $_ENV['host'];
+$dbUser = $_ENV['user'];
+$dbPass = $_ENV['password'];
+$dbName = $_ENV['dbname'];
 
 // Timezone padrão
 date_default_timezone_set('America/Sao_Paulo');

@@ -51,27 +51,26 @@ class Upload {
   }
 
   public function getPhotos($productId) {
-      $productDir = "{$this->uploadDir}/{$productId}";
+    $productDir = "{$this->uploadDir}/{$productId}";
 
-      if (!is_dir($productDir)) {
-          return [];
-      }
+    if (!is_dir($productDir)) {
+      return [];
+    }
 
-      $files = array_diff(scandir($productDir), ['.', '..']);
-      $paths = [];
+    $files = array_diff(scandir($productDir), ['.', '..']);
+    $paths = [];
 
-      foreach ($files as $file) {
-          $paths[] = "{$productDir}/{$file}";
-      }
-
-      return $paths;
+    foreach ($files as $file) {
+      $paths[] = "{$productDir}/{$file}";
+    }
+    return $paths;
   }
 
   public function deletePhoto($productId, $filename) {
-      $filePath = "{$this->uploadDir}/{$productId}/{$filename}";
-      if (file_exists($filePath)) {
-          return unlink($filePath);
-      }
-      return false;
+    $filePath = "{$this->uploadDir}/{$productId}/{$filename}";
+    if (file_exists($filePath)) {
+      return unlink($filePath);
+    }
+    return false;
   }
 }

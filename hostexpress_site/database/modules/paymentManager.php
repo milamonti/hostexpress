@@ -4,9 +4,6 @@ require dirname(__DIR__, 1) . '/config/config.php';
 require_once root . '/database/modules/responseManager.php';
 require_once root . '/vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(root);
-$dotenv->load();
-
 class Payment {
   private string $accessToken;
 
