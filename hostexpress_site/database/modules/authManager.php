@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../config/config.php';
 require_once root . '/conexao.php';
 include_once __DIR__ . '/responseManager.php';
-$Conexao = Conexao::conectar();
+$Connection = Connection::connect();
 
 class Auth
 {
@@ -96,7 +96,7 @@ class Auth
 
   public function authenticateUser(string $email, string $password) :?array
   {
-    global $Conexao;
+    global $Connection;
 
     $email = strtolower(trim($email));
     $password = trim($password);
@@ -107,7 +107,7 @@ class Auth
       WHERE USER = :EMAIL
     SQL;
 
-    $stm = $Conexao->prepare($QUERY);
+    $stm = $Connection->prepare($QUERY);
     $stm->bindParam(':EMAIL', $email, PDO::PARAM_STR);
     $stm->execute();
     $response = $stm->fetch(PDO::FETCH_ASSOC);

@@ -6,7 +6,7 @@ require_once modules . '/responseManager.php';
 
 /**
  * Função que realiza a autenticação do usuário
- * por meio da decodificação do token armazenado
+ * por meio da decodificação do JWT armazenado
  * no cookie da sessão. Caso encontrado retorna as 
  * informações armazenadas nele, do contrário retorna um 
  * JSON com código HTTP 403 de forbidden: 'Usuário não autenticado'
@@ -30,8 +30,8 @@ function authMiddleware()
     return (array) $decoded;
   } catch (\Firebase\JWT\ExpiredException $e) {
     Response::forbidden('Sessão expirada.');
-  } catch (\Exception $e) {
-    Response::forbidden('Erro ao autenticar usuário. ' . $e->getMessage());
+  } catch (\Exception) {
+    Response::forbidden('Erro ao autenticar usuário.');
   }
 }
 

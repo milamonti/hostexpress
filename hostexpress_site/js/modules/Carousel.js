@@ -27,8 +27,8 @@ export const loadCarousel = async () => {
 // Carrega os produtos para os cards do carrossel
 const loadProducts = async () => {
   try {
-    const response = await fetch("./database/api/loadProducts.php");
-    const result = await response.json();
+    const response = await fetch("./database/api/loadProducts.php")
+    .then((res) => res.json());
 
     if(!response.ok || !result.success) {
       return showAlert("error", "Erro!", "Erro ao buscar os produtos!");

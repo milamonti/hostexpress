@@ -16,10 +16,8 @@ if(!$_POST){
 try {
   authMiddleware();
   Shop::updateProduct($_POST);
-} catch (PDOException $e) {
-  Response::internalError($e->getMessage());
-} catch (Exception $e) {
-  Response::sendJson($e->getCode(), $e->getMessage());
+} catch(\Exception $e){
+  Response::handleException($e);
 }
 
 ?>

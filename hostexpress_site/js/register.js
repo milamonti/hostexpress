@@ -23,11 +23,11 @@ $(document).ready(function() {
     if ($("#cep").val().length === 9) getCep();
   });
 
-  $("#clientForm").on("submit", function(e) {
+  $(document).on("submit", "#clientForm", function (e) {
     e.preventDefault();
-    
+
     const form = this;
-    if(validator.validateFields(form)) {
+    if (validator.validateFields(form)) {
       const formData = new FormData(form);
       verifyCode(formData);
     }

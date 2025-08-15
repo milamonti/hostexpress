@@ -1,5 +1,14 @@
+import { showAlert } from "../../utils.js";
+
+$(document).ready(() => {
+  // Carregar datatable
+  loadDatatable();
+  // Event Listener ao clicar
+  $("#refreshOrders").on("click", loadDatatable);
+});
+
+//pedidos
 let pedidos = [
-  //pedidos
   {
     id: 1,
     cliente: "Ronaldo",
@@ -23,6 +32,7 @@ let pedidos = [
     criado: "2025-08-12 09:45",
   },
 ];
+
 // status
 function statusBadge(status) {
   const map = {
@@ -38,12 +48,13 @@ function statusBadge(status) {
 
 // tabela
 async function loadDatatable() {
+  $.fn.dataTable.ext.errMode = "none";
   if ($.fn.DataTable.isDataTable("#ordersTable")) {
     $("#ordersTable").DataTable().destroy();
   }
 
   $("#ordersTable").DataTable({
-    data: pedidos,
+    data: pedidos, // await getOrders()
     columns: [
       { data: "id" },
       { data: "cliente" },
@@ -59,26 +70,26 @@ async function loadDatatable() {
         data: null,
         orderable: false,
         render: (row) => `
-        <div class="btn-group">
-        <button class="btn btn-sm btn-outline-primary" onclick="verItens(${row.id})">
-            <i class="bi bi-list"></i>
-        </button>
-        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown"></button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#" onclick="mudarStatus(${row.id}, 'PENDENTE')">Pendente</a></li>
-            <li><a class="dropdown-item" href="#" onclick="mudarStatus(${row.id}, 'A_CAMINHO')">A caminho</a></li>
-            <li><a class="dropdown-item" href="#" onclick="mudarStatus(${row.id}, 'ENTREGUE')">Entregue</a></li>
-            <li><a class="dropdown-item text-danger" href="#" onclick="mudarStatus(${row.id}, 'CANCELADO')">Cancelar</a></li>
-        </ul>
-        </div>
-    `,
+          <div class="btn-group">
+            <button class="btn btn-sm btn-outline-primary" onclick="showItems(${row.id})">
+              <i class="bi bi-list"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown"></button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#" onclick="changeStatus(${row.id}, 'PENDENTE')">Pendente</a></li>
+              <li><a class="dropdown-item" href="#" onclick="changeStatus(${row.id}, 'A_CAMINHO')">A caminho</a></li>
+              <li><a class="dropdown-item" href="#" onclick="changeStatus(${row.id}, 'ENTREGUE')">Entregue</a></li>
+              <li><a class="dropdown-item text-danger" href="#" onclick="changeStatus(${row.id}, 'CANCELADO')">Cancelar</a></li>
+            </ul>
+          </div>
+        `,
       },
     ],
   });
 }
 
 // mudança de status
-window.mudarStatus = (id, status) => {
+window.changeStatus = (id, status) => {
   Swal.fire({
     title: "Alterar status?",
     text: `Deseja alterar para "${status.replace("_", " ")}"?`,
@@ -91,37 +102,29 @@ window.mudarStatus = (id, status) => {
       const pedido = pedidos.find((p) => p.id === id);
       if (pedido) pedido.status = status;
       loadDatatable();
-      Swal.fire("Sucesso!", "Status alterado.", "success");
+      showAlert("success", "Status alterado!");
     }
   });
 };
 
 // Ver itens no modal
-window.verItens = (id) => {
+window.showItems = (id) => {
   const pedido = pedidos.find((p) => p.id === id);
   if (!pedido) return;
 
-  const html = pedido.itens
-    .map(
-      (i) => `
-      <div><strong>${i.descr}</strong> — Qt: ${i.qtd} — R$ ${i.preco.toFixed(
-        2
-      )}</div>
-    `
-    )
-    .join("");
+  const html = pedido.itens.map((i) => `
+    <div><strong>${i.descr}</strong> — Qt: ${i.qtd} — 
+      R$ ${i.preco.toFixed(2)}
+    </div>
+  `).join("");
 
-  document.getElementById("orderItemsContainer").innerHTML = html;
-  new bootstrap.Modal(document.getElementById("modalOrderItems")).show();
+  $("#orderItemsContainer").html(html);
+  $("#modalOrderItems").modal("show");
 };
 
-// Botão de atualizar
-document
-  .getElementById("refreshOrders")
-  .addEventListener("click", loadDatatable);
+async function getOrders() {
+  const response = await fetch("./database/api/shop/getOrders.php")
+  .then((res) => res.json());
 
-// Inicial
-document.addEventListener("DOMContentLoaded", loadDatatable);
-
-// Carregar a página mais rápido
-//setInterval(loadDatatable, 5000);
+  return response.data || [];
+}

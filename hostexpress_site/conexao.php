@@ -1,13 +1,13 @@
 <?php
 require_once 'database/config/config.php';
 
-class Conexao {
+class Connection {
 
   private static $connection;
 
   private function __construct() {}
 
-  public static function conectar() {
+  public static function connect() {
 
     $pdoConfig = DB_DRIVER . ":host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . CHARSET;
 
@@ -24,6 +24,10 @@ class Conexao {
       $mensagem .= "\nErro: " . $e->getMessage();
       throw new Exception($mensagem);
     }
+  }
+
+  public function __destruct() {
+    self::$connection = null;
   }
 }
 

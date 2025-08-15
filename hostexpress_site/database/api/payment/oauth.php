@@ -5,7 +5,7 @@ require_once 'config.php';
 $authUrl = "https://connect.pagseguro.com/oauth2/authorize?" . http_build_query([
   'response_type' => 'code',
   'client_id' => pagseguro_app_id,
-  'redirect_uri' => 'https://hostexpress.ct.ws.com/oauth.php'
+  'redirect_uri' => 'https://hostexpress.ct.ws./oauth.php'
 ]);
 
 if (!isset($_GET['code'])) {

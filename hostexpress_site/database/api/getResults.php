@@ -3,7 +3,7 @@
 require_once dirname(__DIR__, 1 ) . '/config/config.php';
 require_once modules . '/responseManager.php';
 include_once root . '/conexao.php';
-$Conexao = Conexao::conectar();
+$Connection = Connection::connect();
 
 try {
   $busca = '%' . $_GET['busca'] . '%';
@@ -17,7 +17,7 @@ try {
     FROM he_empresas
     WHERE NOME_FANTASIA LIKE ?;
   SQL;
-  $stm = $Conexao->prepare($QUERY);
+  $stm = $Connection->prepare($QUERY);
   $stm->execute([$busca, $busca]);
   $response = $stm->fetchAll(PDO::FETCH_ASSOC);
   Response::success($response);

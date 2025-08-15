@@ -1,16 +1,34 @@
 <?php
 
-header('Content-Type: application/json');
-require_once dirname(__DIR__, 2) . '/config/config.php';
-require_once root . '/vendor/autoload.php';
+$curl = curl_init();
 
-$key = $_ENV['publicKey'];
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://sandbox.api.pagseguro.com/public-keys",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => json_encode([
+    'type' => 'card'
+  ]),
+  CURLOPT_HTTPHEADER => [
+    "Authorization: Bearer 70a865ed-d6a4-4695-a470-7c382a0fbe59b1144ed14e42924ac49d38534848319111f4-31c1-4cdf-8c70-b999514eba85",
+    "accept: application/json",
+    "content-type: application/json"
+  ],
+]);
 
-$response = [
-  "public_key" => $key,
-  "created_at" => time()
-];
+$response = curl_exec($curl);
+$err = curl_error($curl);
 
-echo json_encode($response);
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}
 
 ?>

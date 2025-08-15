@@ -52,7 +52,6 @@ async function uploadPhoto(id) {
 
   $("#modalAddProduct").modal('hide');
   loadDatatable();
-
 }
 
 async function loadDatatable() {

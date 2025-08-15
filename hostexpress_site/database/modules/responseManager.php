@@ -93,7 +93,7 @@ class Response
 
   /**
    * Executa a saída correta quando ocorre uma exceção no código
-   * @param Exception Recebe uma exceção qualquer em alguma requisição
+   * @param Exception $e Recebe uma exceção qualquer em alguma requisição
    */
   public static function handleException(\Exception $e) :void
   {
@@ -104,4 +104,5 @@ class Response
     }
   }
 }
- 
+
+?>

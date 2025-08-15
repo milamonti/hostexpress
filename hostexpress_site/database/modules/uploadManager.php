@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../config/config.php';
-include_once root . '/database/modules/responseManager.php';
-include_once root . '/database/modules/shopManager.php';
+require_once dirname(__DIR__, 1) . '/config/config.php';
+include_once modules . '/modules/responseManager.php';
+include_once modules . '/modules/shopManager.php';
 
 
 class Upload {

@@ -4,7 +4,7 @@ require_once dirname(__DIR__, 1) . '/config/config.php';
 require_once root . '/conexao.php';
 require_once __DIR__ . '/responseManager.php';
 
-$Conexao = Conexao::conectar();
+$Connection = Connection::connect();
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -141,7 +141,7 @@ class User
    */
   public function authenticateUser(string $email, string $password) :?array
   {
-    global $Conexao;
+    global $Connection;
 
     $email = strtolower(trim($email));
     $password = trim($password);
@@ -152,7 +152,7 @@ class User
       WHERE USER = :EMAIL
     SQL;
 
-    $stm = $Conexao->prepare($QUERY);
+    $stm = $Connection->prepare($QUERY);
     $stm->bindParam(':EMAIL', $email, PDO::PARAM_STR);
     $stm->execute();
     $response = $stm->fetch(PDO::FETCH_ASSOC);

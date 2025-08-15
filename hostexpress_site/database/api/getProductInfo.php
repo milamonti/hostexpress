@@ -1,25 +1,21 @@
 <?php
 
+require_once dirname(__DIR__, 2) . '/middleware/authMiddleware.php';
 require_once dirname(__DIR__, 2) . '/config/config.php';
-require_once root . '/database/modules/responseManager.php';
-include_once root . '/conexao.php';
-$Connection = Connection::connect();
-
-if($_SERVER['REQUEST_METHOD'] != "GET"){
-  Response::methodNotAllowed();
-}
-
-if(!$_GET || !$_GET['id']) {
-  Response::badRequest('Parâmetros não enviados');
-}
-
-$id = $_GET['id'] ?? null;
+include_once modules . '/responseManager.php';
+include_once modules . '/shopManager.php';
 
 try {
-  if (!isset($id)) {
+  if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    Response::methodNotAllowed();
+  }
+
+  if(!isset($_GET['PRODUTO'])) {
     Response::badRequest('ID do produto não informado');
   }
-   
+
+  $id = $_GET['PRODUTO'];
+
   $query = "SELECT * FROM he_produtos WHERE PRODUTO_ID = :id";
   $stmt = $Connection->prepare($query);
   $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -27,13 +23,12 @@ try {
 
   if ($stmt->rowCount() > 0) {
     $product = $stmt->fetch(PDO::FETCH_ASSOC);
+    Response::success($product, 'Produto encontrado');
   } else {
     Response::notFound('Produto não encontrado');
   }
-} catch(\Exception $e){
+} catch(\Exception $e) {
   Response::handleException($e);
 }
 
 ?>
-
-

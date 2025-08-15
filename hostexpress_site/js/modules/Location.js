@@ -26,9 +26,10 @@ async function getUserLocation() {
     const response = await fetch(
       `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
     )
+    .then((res) => res.json())
     .catch((e) => console.log('Erro getting user location', e.message));
     
-    return await response.json();
+    return response;
   } catch (e) {
     console.error(e.message);
   }
@@ -45,7 +46,6 @@ export default function handleUserLocation() {
           : `${result.address.city}`
       );
       localStorage.setItem("address", $("#location").text());
-    }).catch((e) => {
-      console.error("Error getting user location:", e);
-    });
-} 
+    })
+    .catch((e) => console.error("Error getting user location:", e));
+}

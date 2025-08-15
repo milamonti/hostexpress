@@ -35,7 +35,7 @@ export function addCleave(id, type){
 
 /**
  * 
- * @param {string} str 
+ * @param {string} str String a ser filtrada
  * @returns Retorna a string somente com números e/ou letras
  */
 export const removeMask = str => str.replace(/\D/g, '');
@@ -153,12 +153,12 @@ window.Logout = async () => {
   });
 }
 
-export const api = async (url, config = null) => {
-  if(config){
-    return await fetch(url, config)
-    .then((res) => res.json());
-  } else {
-    return await fetch(url)
-    .then((res) => res.json());
-  }
-};
+// export const api = async (url, config = null) => {
+//   if(config){
+//     return await fetch(url, config)
+//     .then((res) => res.json());
+//   } else {
+//     return await fetch(url)
+//     .then((res) => res.json());
+//   }
+// };

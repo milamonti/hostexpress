@@ -16,7 +16,8 @@ window.Login = async (e) => {
   formData.append("EMAIL", $("#email").val());
   formData.append("SENHA", $("#senha").val());
 
-  const response = await fetch("./database/api/login.php", fetchConfig("POST", formData))
+  const response = await fetch(
+    "./database/api/login.php", fetchConfig("POST", formData))
   .then((res) => res.json())
 
   if(!response.success) {
